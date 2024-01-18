@@ -10,14 +10,22 @@ export const createStatus = async (req, res) => {
 
   if (!status_id || !status_name) {
     return res.status(400).json({
-      message: "status_id, status_name  are required",
+      message: "status_id, status_name are required",
     });
   }
 
   try {
-    // สร้างข้อมูลผู้ป่วยในฐานข้อมูล
+    // ตรวจสอบว่า status_id ซ้ำกันหรือไม่
+    const existingStatus = await Status.findOne({ status_id });
+
+    if (existingStatus) {
+      return res.status(409).json({
+        message: "Status with the same ID already exists",
+      });
+    }
+
+    // ถ้าไม่มีข้อมูลซ้ำ, สร้างข้อมูลใหม่
     const newStatus = await Status.create({ ...req.body });
-    // ส่งข้อมูลผู้ป่วยที่สร้างกลับไปเป็น JSON response
     return res.status(201).json(newStatus);
   } catch (error) {
     // หากมีข้อผิดพลาดในการสร้างข้อมูล

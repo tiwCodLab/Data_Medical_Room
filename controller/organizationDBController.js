@@ -15,6 +15,18 @@ export const createOrganizations = async (req, res) => {
   }
 
   try {
+    // ตรวจสอบว่า organizations_id ซ้ำกันหรือไม่
+    const existingOrganization = await Organizations.findOne({
+      organizations_id,
+    });
+
+    if (existingOrganization) {
+      return res.status(409).json({
+        message: "Organization with the same ID already exists",
+      });
+    }
+
+    // ถ้าไม่มีข้อมูลซ้ำ, สร้างข้อมูลใหม่
     const newOrganizations = await Organizations.create({ ...req.body });
     return res.status(201).json(newOrganizations);
   } catch (error) {
