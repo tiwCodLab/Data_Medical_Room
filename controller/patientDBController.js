@@ -12,7 +12,7 @@ export const createPatient = async (req, res) => {
     patient_fname,
     patient_lname,
     status,
-    organezations,
+    organizations,
     age,
   } = req.body;
 
@@ -23,12 +23,12 @@ export const createPatient = async (req, res) => {
     !patient_fname ||
     !patient_lname ||
     !status ||
-    !organezations ||
+    !organizations ||
     !age
   ) {
     return res.status(400).json({
       message:
-        "patient_fname, patient_lname, status, organezations, age are required",
+        "patient_fname, patient_lname, status, organizations, age are required",
     });
   }
 
@@ -47,23 +47,22 @@ export const createPatient = async (req, res) => {
 };
 
 export const getPatient = async (req, res) => {
-  const { student_id } = req.params; // รับ id จากพารามิเตอร์ URL
+  let patient_id = req.params.patient_id;
 
   try {
-    // ดึงข้อมูลผู้ป่วยจากฐานข้อมูลโดยใช้ id
-    const patient = await Patient.findById(student_id);
+    const patient = await Patient.findOne({ patient_id: patient_id })
+      .populate("status") // Populate the status field
+      .populate("organizations") // Populate the organizations field
+      .exec();
 
-    // ตรวจสอบว่ามีผู้ป่วยที่มี id ที่ระบุหรือไม่
     if (!patient) {
       return res.status(404).json({
         message: "Patient not found",
       });
     }
 
-    // ส่งข้อมูลผู้ป่วยกลับไปเป็น JSON response
     return res.status(200).json(patient);
   } catch (error) {
-    // หากเกิดข้อผิดพลาดในการดึงข้อมูล
     return res.status(500).json({
       message: "Internal Server Error",
       error: error.message,

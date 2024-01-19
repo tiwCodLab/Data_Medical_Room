@@ -1,14 +1,13 @@
 import * as mongooseDef from "mongoose";
 let mongoose = mongooseDef.default;
-
 const patientSchema = new mongoose.Schema({
-  patient_id: { type: String, require: true },
-  student_id: { type: Number },
-  patient_fname: { type: String, require: true },
-  patient_lname: { type: String, require: true },
-  status: { type: String },
-  organizations: { type: String },
-  age: { type: Number },
+  patient_id: { type: String, required: true },
+  student_id: { type: Number, required: true },
+  patient_fname: { type: String, required: true },
+  patient_lname: { type: String, required: true },
+  status: { type: mongoose.Schema.Types.ObjectId, ref: "Status" },
+  organizations: { type: mongoose.Schema.Types.ObjectId, ref: "Organizations" },
+  age: { type: Number, required: true },
 });
 
 patientSchema.method.toProfileJSON = function () {

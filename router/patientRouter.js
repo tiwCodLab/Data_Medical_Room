@@ -9,10 +9,10 @@ import {
 } from "../controller/patientDBController.js";
 
 let patientRouter = expres.Router();
-patientRouter.get("/:student_id", getPatient);
+patientRouter.get("/:patient_id", getPatient);
 patientRouter.post("/", createPatient);
 patientRouter.get("/", listPatient);
-patientRouter.put("/:student_id", updatePatient);
-patientRouter.delete("/:student_id", deletePatient);
+patientRouter.put("/:patient_id", updatePatient);
+patientRouter.delete("/:patient_id", deletePatient);
 
 export default patientRouter;

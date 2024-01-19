@@ -17,6 +17,11 @@ import authRouter from "./router/authRouter.js";
 import patientRouter from "./router/patientRouter.js";
 import statusRouter from "./router/statusRouter.js";
 import organizationRouter from "./router/organizationRouter.js";
+import medicalRecordRouter from "./router/medicalRocordRouter.js";
+import medicaltionRouter from "./router/medicationRouter.js";
+import DiagnosisRouter from "./router/diagnosisRouter.js";
+import medicalSuppliesRouter from "./router/medicalsuppliesRouter.js";
+import ActivitiesRouter from "./router/activitiesRouter.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
@@ -47,6 +52,11 @@ app.use("/api/user", verifyJWT, userRouter);
 app.use("/api/patient", patientRouter);
 app.use("/api/status", statusRouter);
 app.use("/api/organization", organizationRouter);
+app.use("/api/medicalrecord", medicalRecordRouter);
+app.use("/api/medication", medicaltionRouter);
+app.use("/api/diagnosis", DiagnosisRouter);
+app.use("/api/medicalSupplies", medicalSuppliesRouter);
+app.use("/api/activities", ActivitiesRouter);
 
 app.get("/", (req, res) => {
   res.status(401).send({ error: "Invalid Endport" });
