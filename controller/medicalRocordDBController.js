@@ -4,7 +4,7 @@ export const listMedicalRecords = async (req, res) => {
   try {
     const result = await MedicalRecord.find()
       .populate("patient")
-      .populate("doctor")
+      // .populate("doctor")
       .exec();
     return res.json(result);
   } catch (error) {
@@ -46,7 +46,7 @@ export const getMedicalRecord = async (req, res) => {
   try {
     const medicalRecord = await MedicalRecord.findById(medicalRecord_id)
       .populate("patient")
-      .populate("doctor")
+      // .populate("doctor")
       .exec();
 
     if (!medicalRecord) {
@@ -75,7 +75,7 @@ export const updateMedicalRecord = async (req, res) => {
       { new: true }
     )
       .populate("patient")
-      .populate("doctor")
+      // .populate("doctor")
       .exec();
 
     if (!updatedMedicalRecord) {
@@ -115,5 +115,20 @@ export const deleteMedicalRecord = async (req, res) => {
       message: "Internal Server Error",
       error: error.message,
     });
+  }
+};
+
+export const getMedicalRecordsByPatientId = async (req, res) => {
+  try {
+    const patientId = req.params.patientId;
+    const medicalRecords = await MedicalRecord.find({
+      patient: patientId,
+    })
+      .populate("patient")
+      .exec();
+    res.json(medicalRecords);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };

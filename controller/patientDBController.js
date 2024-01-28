@@ -1,7 +1,10 @@
 import Patient from "../model/PatientsDB.js";
 
 export const listPatient = async (req, res) => {
-  const result = await Patient.find();
+  const result = await Patient.find()
+    .populate("status") // Populate the status field
+    .populate("organizations") // Populate the organizations field
+    .exec();
   return res.json(result);
 };
 

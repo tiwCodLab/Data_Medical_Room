@@ -4,10 +4,12 @@ const verifyRoles = (...allowedRoles) => {
     if (!req?.roles) return res.sendStatus(401);
     const rolesArray = [...allowedRoles];
     // check for the owner role
-    // and the request's email is the owner of the resource
+    // and the request's username is the owner of the resource
     if (
       rolesArray.findIndex((e) => e === ROLES_LIST.Owner) >= 0 &&
-      req.email === req.params.email
+      /* beware that this work only if username is used as request's 
+parameter */
+      req.username === req.params.username
     ) {
       console.log("passing owner checking");
       next();

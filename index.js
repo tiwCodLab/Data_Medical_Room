@@ -3,6 +3,7 @@ import logger from "morgan";
 import * as dotenv from "dotenv";
 import * as url from "url";
 import mongooseDbConnect from "./config/dbConnect.js";
+import cors from "cors";
 // cookie acessing
 // To allow the browser to set cookies and adhere to Same Origin Policy,
 /* React client should query http://localhost:3000/auth/ instead of the (proxied) 
@@ -29,6 +30,9 @@ const PORT = process.env.PORT || 4000;
 mongooseDbConnect();
 
 const app = express();
+
+// กำหนดค่า CORS middleware
+app.use(cors());
 // custom middleware logger
 app.use(logger("short"));
 // built-in middleware to handle urlencoded form data

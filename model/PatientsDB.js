@@ -2,11 +2,13 @@ import * as mongooseDef from "mongoose";
 let mongoose = mongooseDef.default;
 const patientSchema = new mongoose.Schema({
   patient_id: { type: String, required: true },
-  student_id: { type: Number, required: true },
+  student_id: { type: String, required: true },
   patient_fname: { type: String, required: true },
   patient_lname: { type: String, required: true },
-  status: { type: mongoose.Schema.Types.ObjectId, ref: "Status" },
-  organizations: { type: mongoose.Schema.Types.ObjectId, ref: "Organizations" },
+  status: { type: String },
+  organizations: { type: String },
+  // status: { type: mongoose.Schema.Types.ObjectId, ref: "Status" },
+  // organizations: { type: mongoose.Schema.Types.ObjectId, ref: "Organizations" },
   age: { type: Number, required: true },
 });
 

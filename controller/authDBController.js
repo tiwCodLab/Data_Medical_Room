@@ -1,13 +1,12 @@
 import User from "../model/UserDB.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-const signToken = (username, firstname, lastname, roles) => {
+const signToken = (username, name, roles) => {
   return jwt.sign(
     {
       UserInfo: {
         username: username,
-        firstname: firstname,
-        lastname: lastname,
+        name: name,
         roles: roles,
       },
     },
@@ -38,8 +37,7 @@ const handleLogin = async (req, res) => {
     // create JWTs
     const accessToken = signToken(
       foundUser.username,
-      foundUser.firstname,
-      foundUser.lastname,
+      foundUser.name,
       foundUser.roles
     );
     const refreshToken = jwt.sign(
@@ -122,6 +120,7 @@ const handleRefreshToken = async (req, res) => {
       // evaluate jwt
       jwt.verify(
         refreshToken,
+
         process.env.REFRESH_TOKEN_SECRET,
         (err, decoded) => {
           if (err || foundUser.username !== decoded.username)
