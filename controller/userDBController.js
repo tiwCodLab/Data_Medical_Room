@@ -10,8 +10,8 @@ export const list = async (req, res) => {
 };
 // add new user
 export const create = async (req, res) => {
-  const { username, name, password } = req.body;
-  if (!username || !name || !password)
+  const { firstname, lastname, username, password } = req.body;
+  if (!firstname || !lastname || !username || !password)
     return res
       .status(400)
       .json({ message: "username, name and password are required." });
@@ -28,7 +28,7 @@ export const create = async (req, res) => {
     //create and store the new user
     const result = await User.create({ ...req.body, password: hashedPwd });
     console.log(result);
-    res.status(201).json({ success: `New user ${name} created!` });
+    res.status(201).json({ success: `New user ${username} created!` });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
