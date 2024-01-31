@@ -128,7 +128,7 @@ const handleRefreshToken = async (req, res) => {
           const roles = Object.values(foundUser.roles);
           const accessToken = signToken(
             decoded.username,
-            foundUser.name,
+            foundUser.firstname,
             roles
           );
           res.json({ roles, accessToken });
