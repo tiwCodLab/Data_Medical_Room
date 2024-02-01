@@ -74,13 +74,13 @@ export const getPatient = async (req, res) => {
 };
 
 export const updatePatient = async (req, res) => {
-  const { student_id } = req.params; // รับ id จากพารามิเตอร์ URL
+  const { patient_id } = req.params; // รับ id จากพารามิเตอร์ URL
   const updateData = req.body; // รับข้อมูลที่ต้องการอัปเดตจาก request body
 
   try {
     // ใช้ findByIdAndUpdate เพื่อค้นหาและอัปเดตข้อมูลผู้ป่วย
     const updatedPatient = await Patient.findByIdAndUpdate(
-      student_id,
+      patient_id,
       updateData,
       { new: true }
     );
@@ -105,11 +105,11 @@ export const updatePatient = async (req, res) => {
 
 // Delete a patient identified by the student_id in the request
 export const deletePatient = async (req, res) => {
-  const { student_id } = req.params; // รับ id จากพารามิเตอร์ URL
+  const { patient_id } = req.params; // รับ id จากพารามิเตอร์ URL
 
   try {
     // ใช้ findByIdAndDelete เพื่อค้นหาและลบข้อมูลผู้ป่วย
-    const deletedPatient = await Patient.findByIdAndDelete(student_id);
+    const deletedPatient = await Patient.findByIdAndDelete(patient_id);
 
     // ตรวจสอบว่ามีผู้ป่วยที่มี id ที่ระบุหรือไม่
     if (!deletedPatient) {
