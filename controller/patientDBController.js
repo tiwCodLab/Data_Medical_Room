@@ -20,20 +20,20 @@ export const createPatient = async (req, res) => {
   } = req.body;
 
   // ตรวจสอบว่าข้อมูลที่จำเป็นสำหรับการสร้างผู้ป่วยถูกส่งมาหรือไม่
-  if (
-    !patient_id ||
-    !student_id ||
-    !patient_fname ||
-    !patient_lname ||
-    !status ||
-    !organizations ||
-    !age
-  ) {
-    return res.status(400).json({
-      message:
-        "patient_fname, patient_lname, status, organizations, age are required",
-    });
-  }
+  // if (
+  //   !patient_id ||
+  //   !student_id ||
+  //   !patient_fname ||
+  //   !patient_lname ||
+  //   !status ||
+  //   !organizations ||
+  //   !age
+  // ) {
+  //   return res.status(400).json({
+  //     message:
+  //       "patient_fname, patient_lname, status, organizations, age are required",
+  //   });
+  // }
 
   try {
     // สร้างข้อมูลผู้ป่วยในฐานข้อมูล
