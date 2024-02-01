@@ -5,12 +5,37 @@ export const listOrganization = async (req, res) => {
   return res.json(result);
 };
 
+export const getOrganizationById = async (req, res) => {
+  const { organizations_id } = req.params; // Retrieve the organization_id from URL parameters
+
+  try {
+    // Use findOne to find an organization by its ID
+    const organization = await Organizations.findById(organizations_id);
+
+    // Check if the organization with the specified ID exists
+    if (!organization) {
+      return res.status(404).json({
+        message: "Organization not found",
+      });
+    }
+
+    // Return the organization as a JSON response
+    return res.json(organization);
+  } catch (error) {
+    // Handle errors that may occur during the retrieval process
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
 export const createOrganizations = async (req, res) => {
   const { organizations_id, organizations_name } = req.body;
 
   if (!organizations_id || !organizations_name) {
     return res.status(400).json({
-      message: "organization_id, organization_name are required",
+      message: "organization_name is required",
     });
   }
 
@@ -20,6 +45,7 @@ export const createOrganizations = async (req, res) => {
       organizations_id,
     });
 
+    // ถ้ามีข้อมูลองค์กรที่มี organizations_id ที่ระบุ
     if (existingOrganization) {
       return res.status(409).json({
         message: "Organization with the same ID already exists",
@@ -27,8 +53,12 @@ export const createOrganizations = async (req, res) => {
     }
 
     // ถ้าไม่มีข้อมูลซ้ำ, สร้างข้อมูลใหม่
-    const newOrganizations = await Organizations.create({ ...req.body });
-    return res.status(201).json(newOrganizations);
+    const newOrganization = await Organizations.create({
+      organizations_id,
+      organizations_name,
+    });
+
+    return res.status(201).json(newOrganization);
   } catch (error) {
     // หากมีข้อผิดพลาดในการสร้างข้อมูล
     return res.status(500).json({
@@ -77,11 +107,18 @@ export const updateOrganization = async (req, res) => {
 export const deleteOrganization = async (req, res) => {
   const { organizations_id } = req.params; // รับ id จากพารามิเตอร์ URL
 
+  // Check if organizations_id is provided
+  if (!organizations_id) {
+    return res.status(400).json({
+      message: "Organization ID is required",
+    });
+  }
+
   try {
     // ใช้ findOneAndDelete เพื่อค้นหาและลบข้อมูลองค์กร
-    const deletedOrganization = await Organizations.findOneAndDelete({
-      organizations_id,
-    });
+    const deletedOrganization = await Organizations.findByIdAndDelete(
+      organizations_id
+    );
 
     // ตรวจสอบว่ามีข้อมูลองค์กรที่มี id ที่ระบุหรือไม่
     if (!deletedOrganization) {

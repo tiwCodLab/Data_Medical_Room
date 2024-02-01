@@ -3,7 +3,7 @@ import Diagnosis from "../model/DiagnosisDB.js";
 export const createDiagnosis = async (req, res) => {
   const { diagnosis_id, diagnosis_name } = req.body;
 
-  if (!diagnosis_id || !diagnosis_name) {
+  if (!diagnosis_name) {
     return res.status(400).json({
       message: "diagnosis_id and diagnosis_name are required",
     });
@@ -35,12 +35,11 @@ export const listDiagnosis = async (req, res) => {
   }
 };
 
-
 export const getDiagnosis = async (req, res) => {
   const { diagnosis_id } = req.params;
 
   try {
-    const diagnosis = await Diagnosis.findOne({ diagnosis_id });
+    const diagnosis = await Diagnosis.findById(diagnosis_id);
 
     if (!diagnosis) {
       return res.status(404).json({
@@ -57,14 +56,13 @@ export const getDiagnosis = async (req, res) => {
   }
 };
 
-
 export const updateDiagnosis = async (req, res) => {
   const { diagnosis_id } = req.params;
   const updateData = req.body;
 
   try {
-    const updatedDiagnosis = await Diagnosis.findOneAndUpdate(
-      { diagnosis_id },
+    const updatedDiagnosis = await Diagnosis.findByIdAndUpdate(
+      diagnosis_id,
       updateData,
       { new: true }
     );
@@ -84,12 +82,11 @@ export const updateDiagnosis = async (req, res) => {
   }
 };
 
-
 export const deleteDiagnosis = async (req, res) => {
   const { diagnosis_id } = req.params;
 
   try {
-    const deletedDiagnosis = await Diagnosis.findOneAndDelete({ diagnosis_id });
+    const deletedDiagnosis = await Diagnosis.findByIdAndDelete(diagnosis_id);
 
     if (!deletedDiagnosis) {
       return res.status(404).json({
