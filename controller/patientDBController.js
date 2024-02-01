@@ -50,10 +50,10 @@ export const createPatient = async (req, res) => {
 };
 
 export const getPatient = async (req, res) => {
-  let patient_id = req.params.patient_id;
+  let { patient_id } = req.params;
 
   try {
-    const patient = await Patient.findOne({ patient_id: patient_id })
+    const patient = await Patient.findById(patient_id)
       .populate("status") // Populate the status field
       .populate("organizations") // Populate the organizations field
       .exec();
