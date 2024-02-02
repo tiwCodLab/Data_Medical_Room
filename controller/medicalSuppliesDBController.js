@@ -24,21 +24,6 @@ export const createMedicalsupply = async (req, res) => {
     properties,
   } = req.body;
 
-  // Check if required fields are provided
-  if (
-    !medical_supplies_id ||
-    !medical_supplies_name ||
-    !unit ||
-    !price ||
-    !quantity ||
-    !properties
-  ) {
-    return res.status(400).json({
-      message:
-        "medical_supplies_id, medical_supplies_name, unit, price, quantity, and properties are required",
-    });
-  }
-
   try {
     // Create a new medical supply in the database
     const newMedicalsupply = await Medicalsupplies.create({
@@ -66,9 +51,7 @@ export const getMedicalsupply = async (req, res) => {
 
   try {
     // Find the medical supply in the database by ID
-    const medicalsupply = await Medicalsupplies.findOne({
-      medical_supplies_id: medical_supplies_id,
-    });
+    const medicalsupply = await Medicalsupplies.findById(medical_supplies_id);
 
     // Check if the medical supply was found
     if (!medicalsupply) {
@@ -94,8 +77,8 @@ export const updateMedicalsupply = async (req, res) => {
 
   try {
     // Find and update the medical supply in the database by ID
-    const updatedMedicalsupply = await Medicalsupplies.findOneAndUpdate(
-      { medical_supplies_id: medical_supplies_id },
+    const updatedMedicalsupply = await Medicalsupplies.findByIdAndUpdate(
+      medical_supplies_id,
       updateData,
       { new: true }
     );
@@ -123,9 +106,9 @@ export const deleteMedicalsupply = async (req, res) => {
 
   try {
     // Find and delete the medical supply in the database by ID
-    const deletedMedicalsupply = await Medicalsupplies.findOneAndDelete({
-      medical_supplies_id: medical_supplies_id,
-    });
+    const deletedMedicalsupply = await Medicalsupplies.findByIdAndDelete(
+      medical_supplies_id
+    );
 
     // Check if the medical supply was found and deleted
     if (!deletedMedicalsupply) {

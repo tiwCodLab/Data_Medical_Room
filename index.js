@@ -59,7 +59,7 @@ app.use("/api/organization", organizationRouter);
 app.use("/api/medicalrecord", medicalRecordRouter);
 app.use("/api/medication", medicaltionRouter);
 app.use("/api/diagnosis", DiagnosisRouter);
-app.use("/api/medicalSupplies", medicalSuppliesRouter);
+app.use("/api/medicalsupplies", medicalSuppliesRouter);
 app.use("/api/activities", ActivitiesRouter);
 
 app.get("/", (req, res) => {

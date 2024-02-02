@@ -15,6 +15,7 @@ export const listMedications = async (req, res) => {
 export const createMedication = async (req, res) => {
   const { medication_id, medication_name, unit, price, quantity, properties } =
     req.body;
+
   try {
     const newMedication = await Medication.create({
       medication_id,
@@ -27,12 +28,38 @@ export const createMedication = async (req, res) => {
 
     return res.status(201).json(newMedication);
   } catch (error) {
+    console.error("Error creating medication:", error);
+
+    if (error.name === "ValidationError") {
+      // Handle validation errors
+      return res.status(400).json({
+        message: "Validation Error",
+        error: error.message,
+      });
+    }
+
     return res.status(500).json({
       message: "Internal Server Error",
       error: error.message,
     });
   }
 };
+
+// export const createMedication = async (req, res) => {
+//   const newMedicationData = req.body;
+
+//   try {
+//     const newMedication = new Medication(newMedicationData);
+//     const savedMedication = await newMedication.save();
+
+//     return res.status(201).json(savedMedication);
+//   } catch (error) {
+//     return res.status(500).json({
+//       message: "Internal Server Error",
+//       error: error.message,
+//     });
+//   }
+// };
 
 export const getMedication = async (req, res) => {
   const { medication_id } = req.params;
