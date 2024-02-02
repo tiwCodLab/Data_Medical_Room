@@ -1,11 +1,40 @@
 import MedicalRecord from "../model/MedicalRecordsDB.js";
 
+// export const listMedicalRecords = async (req, res) => {
+//   try {
+//     const result = await MedicalRecord.find()
+//       .populate("patient")
+//       // .populate("doctor")
+//       .exec();
+//     return res.json(result);
+//   } catch (error) {
+//     return res.status(500).json({
+//       message: "Internal Server Error",
+//       error: error.message,
+//     });
+//   }
+// };
+
 export const listMedicalRecords = async (req, res) => {
   try {
+    // Extracting query parameters
+    const { page = 1, pageSize = 2 } = req.query;
+
+    // Parsing the page and pageSize to integers
+    const pageNumber = parseInt(page);
+    const recordsPerPage = parseInt(pageSize);
+
+    // Calculate the skip value based on the page number and page size
+    const skip = (pageNumber - 1) * recordsPerPage;
+
+    // Query the database with pagination
     const result = await MedicalRecord.find()
       .populate("patient")
       // .populate("doctor")
+      .skip(skip)
+      .limit(recordsPerPage)
       .exec();
+
     return res.json(result);
   } catch (error) {
     return res.status(500).json({

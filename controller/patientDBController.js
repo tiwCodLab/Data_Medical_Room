@@ -1,11 +1,33 @@
 import Patient from "../model/PatientsDB.js";
 
+// export const listPatient = async (req, res) => {
+//   const result = await Patient.find()
+//     .populate("status") // Populate the status field
+//     .populate("organizations") // Populate the organizations field
+//     .exec();
+//   return res.json(result);
+// };
 export const listPatient = async (req, res) => {
-  const result = await Patient.find()
-    .populate("status") // Populate the status field
-    .populate("organizations") // Populate the organizations field
-    .exec();
-  return res.json(result);
+  try {
+    const { page = 1, pageSize = 10 } = req.query;
+
+    // Calculate skip value based on page and page size
+    const skip = (page - 1) * pageSize;
+
+    const result = await Patient.find()
+      .populate("status")
+      .populate("organizations")
+      .skip(skip)
+      .limit(parseInt(pageSize))
+      .exec();
+
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
 };
 
 export const createPatient = async (req, res) => {
