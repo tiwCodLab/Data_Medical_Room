@@ -18,7 +18,7 @@ import MedicalRecord from "../model/MedicalRecordsDB.js";
 export const listMedicalRecords = async (req, res) => {
   try {
     // Extracting query parameters
-    const { page = 1, pageSize = 2 } = req.query;
+    const { page = 1, pageSize = 15 } = req.query;
 
     // Parsing the page and pageSize to integers
     const pageNumber = parseInt(page);
