@@ -15,21 +15,6 @@ export const listMedications = async (req, res) => {
 export const createMedication = async (req, res) => {
   const { medication_id, medication_name, unit, price, quantity, properties } =
     req.body;
-
-  if (
-    !medication_id ||
-    !medication_name ||
-    !unit ||
-    !price ||
-    !quantity ||
-    !properties
-  ) {
-    return res.status(400).json({
-      message:
-        "medication_id, medication_name, unit, price, quantity, and properties are required",
-    });
-  }
-
   try {
     const newMedication = await Medication.create({
       medication_id,
@@ -53,7 +38,7 @@ export const getMedication = async (req, res) => {
   const { medication_id } = req.params;
 
   try {
-    const medication = await Medication.findOne({ medication_id });
+    const medication = await Medication.findById(medication_id);
 
     if (!medication) {
       return res.status(404).json({
@@ -75,8 +60,8 @@ export const updateMedication = async (req, res) => {
   const updateData = req.body;
 
   try {
-    const updatedMedication = await Medication.findOneAndUpdate(
-      { medication_id },
+    const updatedMedication = await Medication.findByIdAndUpdate(
+      medication_id,
       updateData,
       { new: true }
     );
@@ -100,9 +85,7 @@ export const deleteMedication = async (req, res) => {
   const { medication_id } = req.params;
 
   try {
-    const deletedMedication = await Medication.findOneAndDelete({
-      medication_id,
-    });
+    const deletedMedication = await Medication.findByIdAndDelete(medication_id);
 
     if (!deletedMedication) {
       return res.status(404).json({
