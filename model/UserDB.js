@@ -20,8 +20,8 @@ const userSchema = new mongoose.Schema({
     minLength: [40], // bcrypt hash binary size is 40+
   },
   roles: {
-    User: { type: Number },
-    Editor: { type: Number },
+    Psychologist: { type: Number },
+    Nurse: { type: Number },
     Admin: { type: Number },
   },
   refreshToken: { type: String },
