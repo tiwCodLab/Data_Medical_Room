@@ -1,10 +1,10 @@
 import * as mongooseDef from "mongoose";
 let mongoose = mongooseDef.default;
 const patientSchema = new mongoose.Schema({
-  patient_id: { type: String, required: true },
-  student_id: { type: String, required: true },
-  patient_fname: { type: String, required: true },
-  patient_lname: { type: String, required: true },
+  patient_id: { type: String },
+  student_id: { type: String },
+  patient_fname: { type: String },
+  patient_lname: { type: String },
   status: { type: String },
   organizations: { type: String },
   // status: { type: mongoose.Schema.Types.ObjectId, ref: "Status" },
