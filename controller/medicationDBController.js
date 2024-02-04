@@ -23,7 +23,15 @@ export const createMedication = async (req, res) => {
     if (duplicate) {
       return res.sendStatus(409);
     } else {
-      const newMedication = await Activities.create({ ...req.body });
+      const newMedication = await Medication.create({
+        medication_id,
+        medication_name,
+        unit,
+        price,
+        quantity,
+        properties,
+      });
+
       return res.status(201).json(newMedication);
     }
   } catch (error) {
