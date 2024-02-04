@@ -10,11 +10,20 @@ export const createDiagnosis = async (req, res) => {
   }
 
   try {
-    const newDiagnosis = await Diagnosis.create({
-      diagnosis_id,
-      diagnosis_name,
+
+    const duplicate = await Diagnosis.findOne({
+      diagnosis_id: diagnosis_id,
     });
-    return res.status(201).json(newDiagnosis);
+    if (duplicate) {
+      return res.sendStatus(409);
+    } else {
+       const newDiagnosis = await Diagnosis.create({
+         diagnosis_id,
+         diagnosis_name,
+       });
+       return res.status(201).json(newDiagnosis);
+    }
+   
   } catch (error) {
     return res.status(500).json({
       message: "Internal Server Error",

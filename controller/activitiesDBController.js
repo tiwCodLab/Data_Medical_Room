@@ -22,8 +22,15 @@ export const createActivity = async (req, res) => {
   }
 
   try {
-    const newActivity = await Activities.create({ ...req.body });
-    return res.status(201).json(newActivity);
+    const duplicate = await Activities.findOne({
+      activities_id: activities_id,
+    });
+    if (duplicate) {
+      return res.sendStatus(409);
+    } else {
+      const newActivity = await Activities.create({ ...req.body });
+      return res.status(201).json(newActivity);
+    }
   } catch (error) {
     return res.status(500).json({
       message: "Internal Server Error",

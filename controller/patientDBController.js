@@ -59,9 +59,16 @@ export const createPatient = async (req, res) => {
 
   try {
     // สร้างข้อมูลผู้ป่วยในฐานข้อมูล
-    const newPatient = await Patient.create({ ...req.body });
-    // ส่งข้อมูลผู้ป่วยที่สร้างกลับไปเป็น JSON response
-    return res.status(201).json(newPatient);
+
+    const duplicate = await Patient.findOne({
+      student_id: student_id,
+    });
+    if (duplicate) {
+      return res.sendStatus(409);
+    } else {
+      const newPatient = await Patient.create({ ...req.body });
+      return res.status(201).json(newPatient);
+    }
   } catch (error) {
     // หากมีข้อผิดพลาดในการสร้างข้อมูล
     return res.status(500).json({

@@ -17,16 +17,15 @@ export const createMedication = async (req, res) => {
     req.body;
 
   try {
-    const newMedication = await Medication.create({
-      medication_id,
-      medication_name,
-      unit,
-      price,
-      quantity,
-      properties,
+    const duplicate = await Medication.findOne({
+      medication_id: medication_id,
     });
-
-    return res.status(201).json(newMedication);
+    if (duplicate) {
+      return res.sendStatus(409);
+    } else {
+      const newMedication = await Activities.create({ ...req.body });
+      return res.status(201).json(newMedication);
+    }
   } catch (error) {
     console.error("Error creating medication:", error);
 
@@ -44,22 +43,6 @@ export const createMedication = async (req, res) => {
     });
   }
 };
-
-// export const createMedication = async (req, res) => {
-//   const newMedicationData = req.body;
-
-//   try {
-//     const newMedication = new Medication(newMedicationData);
-//     const savedMedication = await newMedication.save();
-
-//     return res.status(201).json(savedMedication);
-//   } catch (error) {
-//     return res.status(500).json({
-//       message: "Internal Server Error",
-//       error: error.message,
-//     });
-//   }
-// };
 
 export const getMedication = async (req, res) => {
   const { medication_id } = req.params;

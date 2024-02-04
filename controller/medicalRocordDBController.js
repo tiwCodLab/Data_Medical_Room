@@ -23,7 +23,6 @@ export const listMedicalRecords = async (req, res) => {
     // Parsing the page and pageSize to integers
     const pageNumber = parseInt(page);
     const recordsPerPage = parseInt(pageSize);
-
     // Calculate the skip value based on the page number and page size
     const skip = (pageNumber - 1) * recordsPerPage;
 

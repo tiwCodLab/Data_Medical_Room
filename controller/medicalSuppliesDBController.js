@@ -25,18 +25,15 @@ export const createMedicalsupply = async (req, res) => {
   } = req.body;
 
   try {
-    // Create a new medical supply in the database
-    const newMedicalsupply = await Medicalsupplies.create({
-      medical_supplies_id,
-      medical_supplies_name,
-      unit,
-      price,
-      quantity,
-      properties,
+    const duplicate = await Medicalsupplies.findOne({
+      medical_supplies_id: medical_supplies_id,
     });
-
-    // Return the created medical supply as JSON response
-    return res.status(201).json(newMedicalsupply);
+    if (duplicate) {
+      return res.sendStatus(409);
+    } else {
+      const newMedicalsupply = await Medicalsupplies.create({ ...req.body });
+      return res.status(201).json(newMedicalsupply);
+    }
   } catch (error) {
     return res.status(500).json({
       message: "Internal Server Error",
