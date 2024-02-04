@@ -5,7 +5,7 @@ import {
   getMedicalRecord,
   updateMedicalRecord,
   deleteMedicalRecord,
-  getMedicalRecordsByPatientId
+  getMedicalRecordsByPatientId,
 } from "../controller/medicalRocordDBController.js";
 
 const medicalRecordRouter = express.Router();
