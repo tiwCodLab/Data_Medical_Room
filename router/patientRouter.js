@@ -6,9 +6,11 @@ import {
   getPatient,
   updatePatient,
   deletePatient,
+  searchPatient,
 } from "../controller/patientDBController.js";
 
 let patientRouter = expres.Router();
+patientRouter.get("/search", searchPatient);
 patientRouter.get("/:patient_id", getPatient);
 patientRouter.post("/", createPatient);
 patientRouter.get("/", listPatient);

@@ -7,6 +7,31 @@ import Patient from "../model/PatientsDB.js";
 //     .exec();
 //   return res.json(result);
 // };
+
+//ค้นหา
+export const searchPatient = async (req, res) => {
+  try {
+    const { student_id } = req.query;
+    // Build a query object based on search parameters
+    const query = {};
+    if (student_id) {
+      query.student_id = student_id;
+    }
+
+    const result = await Patient.find(query)
+      .populate("status")
+      .populate("organizations")
+      .exec();
+
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
 export const listPatient = async (req, res) => {
   try {
     const { page = 1, pageSize = 10 } = req.query;
