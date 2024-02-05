@@ -6,8 +6,7 @@ import mongooseDbConnect from "./config/dbConnect.js";
 import cors from "cors";
 // cookie acessing
 // To allow the browser to set cookies and adhere to Same Origin Policy,
-/* React client should query http://localhost:3000/auth/ instead of the (proxied) 
-server url (port 4000) */
+
 import cookieParser from "cookie-parser";
 // authorization
 import verifyJWT from "./middleware/verifyJWT.js";
@@ -23,6 +22,7 @@ import medicaltionRouter from "./router/medicationRouter.js";
 import DiagnosisRouter from "./router/diagnosisRouter.js";
 import medicalSuppliesRouter from "./router/medicalsuppliesRouter.js";
 import ActivitiesRouter from "./router/activitiesRouter.js";
+import DispensingRouter from "./router/dispensingRouter.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
@@ -61,6 +61,7 @@ app.use("/api/medication", medicaltionRouter);
 app.use("/api/diagnosis", DiagnosisRouter);
 app.use("/api/medicalsupplies", medicalSuppliesRouter);
 app.use("/api/activities", ActivitiesRouter);
+app.use("/api/dispensing", DispensingRouter);
 
 app.get("/", (req, res) => {
   res.status(401).send({ error: "Invalid Endport" });

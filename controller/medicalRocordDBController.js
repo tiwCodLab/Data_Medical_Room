@@ -1,23 +1,7 @@
 import MedicalRecord from "../model/MedicalRecordsDB.js";
-
-// export const listMedicalRecords = async (req, res) => {
-//   try {
-//     const result = await MedicalRecord.find()
-//       .populate("patient")
-//       // .populate("doctor")
-//       .exec();
-//     return res.json(result);
-//   } catch (error) {
-//     return res.status(500).json({
-//       message: "Internal Server Error",
-//       error: error.message,
-//     });
-//   }
-// };
-
+import Medication from "../model/MedicationsDB.js";
 export const listMedicalRecords = async (req, res) => {
   try {
-    // Extracting query parameters
     const { page = 1, pageSize = 15 } = req.query;
 
     // Parsing the page and pageSize to integers
@@ -43,7 +27,55 @@ export const listMedicalRecords = async (req, res) => {
   }
 };
 
+async function aggregateMedication(medical) {
+  let group = {};
+  let aggProd = [];
+
+  medical.forEach((e) => {
+    let key = e.id;
+    if (group.hasOwnProperty(key)) {
+      group[key].count += e.qty;
+    } else {
+      group[key] = { count: e.qty };
+    }
+  });
+
+  let arrIDs = Object.keys(group);
+
+  try {
+    const groupmedical = await Medication.find(
+      { medication_id: { $in: arrIDs } },
+      { medication_id: true, _id: true, price: true }
+    );
+
+    if (groupmedical && groupmedical.length > 0) {
+      let total = 0;
+      groupmedical.forEach((e) => {
+        let subtotal = group[e.medication_id].count * e.price;
+        aggProd.push({
+          medication_id: e._id, // Change to match your schema
+          unitPrice: e.price,
+          qty: group[e.medication_id].count,
+          subtotal: subtotal,
+        });
+        total += subtotal;
+      });
+
+      console.log("-----", aggProd);
+      return { medications: aggProd, total };
+    } else {
+      return {};
+    }
+  } catch (error) {
+    console.error("Error aggregating medication:", error);
+    return {};
+  }
+}
+
 export const createMedicalRecord = async (req, res) => {
+  var medication = req.body.checkoutMedication; // Update the path accordingly
+  var { medications, total } = await aggregateMedication(medication);
+
   let { medicalRecord_id, patient, doctor, ...otherFields } = req.body;
 
   if (!medicalRecord_id || !patient || !doctor) {
@@ -57,9 +89,25 @@ export const createMedicalRecord = async (req, res) => {
       medicalRecord_id,
       patient,
       doctor,
+      dispensingItems: medications, // Update field accordingly
+      total,
       ...otherFields,
     });
-    return res.status(201).json(newMedicalRecord);
+
+    console.log("save ", newMedicalRecord); // Corrected: Log the newMedicalRecord, not result
+
+    const addedOrder = await MedicalRecord.findById(newMedicalRecord._id)
+      .populate({ path: "dispensingItems.medicationRef" }) // Update path accordingly
+      .exec();
+
+    if (addedOrder) {
+      console.log(JSON.stringify(addedOrder, null, "\t"));
+      res.status(201).json(addedOrder); // Corrected: Return addedOrder instead of newMedicalRecord
+    } else {
+      return res.status(400).send({
+        errors: "Cannot process the order",
+      });
+    }
   } catch (error) {
     return res.status(500).json({
       message: "Internal Server Error",
