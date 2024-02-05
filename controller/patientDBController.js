@@ -1,13 +1,5 @@
 import Patient from "../model/PatientsDB.js";
 
-// export const listPatient = async (req, res) => {
-//   const result = await Patient.find()
-//     .populate("status") // Populate the status field
-//     .populate("organizations") // Populate the organizations field
-//     .exec();
-//   return res.json(result);
-// };
-
 //ค้นหา
 export const searchPatient = async (req, res) => {
   try {
@@ -65,22 +57,6 @@ export const createPatient = async (req, res) => {
     organizations,
     age,
   } = req.body;
-
-  // ตรวจสอบว่าข้อมูลที่จำเป็นสำหรับการสร้างผู้ป่วยถูกส่งมาหรือไม่
-  // if (
-  //   !patient_id ||
-  //   !student_id ||
-  //   !patient_fname ||
-  //   !patient_lname ||
-  //   !status ||
-  //   !organizations ||
-  //   !age
-  // ) {
-  //   return res.status(400).json({
-  //     message:
-  //       "patient_fname, patient_lname, status, organizations, age are required",
-  //   });
-  // }
 
   try {
     // สร้างข้อมูลผู้ป่วยในฐานข้อมูล

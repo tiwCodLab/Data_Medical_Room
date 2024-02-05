@@ -3,6 +3,7 @@ let mongoose = mongooseDef.default;
 const patientSchema = new mongoose.Schema({
   patient_id: { type: String },
   student_id: { type: String },
+  prefix: { type: String },
   patient_fname: { type: String },
   patient_lname: { type: String },
   status: { type: String },
@@ -15,6 +16,7 @@ const patientSchema = new mongoose.Schema({
 patientSchema.method.toProfileJSON = function () {
   return {
     student_id: this.student_id,
+    prefix: this.prefix,
     patient_fname: this.patient_fname,
     patient_lname: this.patient_lname,
     status: this.status,
