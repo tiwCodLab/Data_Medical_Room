@@ -23,6 +23,8 @@ import DiagnosisRouter from "./router/diagnosisRouter.js";
 import medicalSuppliesRouter from "./router/medicalsuppliesRouter.js";
 import ActivitiesRouter from "./router/activitiesRouter.js";
 import DispensingRouter from "./router/dispensingRouter.js";
+import ChecklistRouter from "./router/checklistRouter.js";
+import SystemRouter from "./router/sysyemreviewRouter.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
@@ -62,6 +64,8 @@ app.use("/api/diagnosis", DiagnosisRouter);
 app.use("/api/medicalsupplies", medicalSuppliesRouter);
 app.use("/api/activities", ActivitiesRouter);
 app.use("/api/dispensing", DispensingRouter);
+app.use("/api/checklist", ChecklistRouter);
+app.use("/api/review", SystemRouter);
 
 app.get("/", (req, res) => {
   res.status(401).send({ error: "Invalid Endport" });
