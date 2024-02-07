@@ -5,6 +5,7 @@ import {
   getAllGenarals,
   updateGenaral,
   deleteGenaral,
+  getGeneralByPatientId,
 } from "../controller/generalDBController.js";
 
 const GenaralRouter = express.Router();
@@ -13,5 +14,6 @@ GenaralRouter.get("/", getAllGenarals);
 GenaralRouter.get("/:genaral_id", getGenaralById);
 GenaralRouter.put("/:genaral_id", updateGenaral);
 GenaralRouter.delete("/:genaral_id", deleteGenaral);
+GenaralRouter.get("/patient/:patientId", getGeneralByPatientId);
 
 export default GenaralRouter;

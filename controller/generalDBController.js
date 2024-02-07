@@ -67,6 +67,21 @@ const deleteGenaral = async (req, res) => {
   }
 };
 
+export const getGeneralByPatientId = async (req, res) => {
+  try {
+    const patientId = req.params.patientId;
+    const medicalRecords = await Genaral.find({
+      patient: patientId,
+    })
+      .populate("patient")
+      .exec();
+    res.json(medicalRecords);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 export {
   createGenaral,
   getAllGenarals,
