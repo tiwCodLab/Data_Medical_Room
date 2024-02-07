@@ -1,32 +1,5 @@
 import MedicalRecord from "../model/MedicalRecordsDB.js";
-
-export const listMedicalRecords = async (req, res) => {
-  try {
-    // Extracting query parameters
-    const { page = 1, pageSize = 15 } = req.query;
-
-    // Parsing the page and pageSize to integers
-    const pageNumber = parseInt(page);
-    const recordsPerPage = parseInt(pageSize);
-    // Calculate the skip value based on the page number and page size
-    const skip = (pageNumber - 1) * recordsPerPage;
-
-    // Query the database with pagination
-    const result = await MedicalRecord.find()
-      .populate("patient")
-      // .populate("doctor")
-      .skip(skip)
-      .limit(recordsPerPage)
-      .exec();
-
-    return res.json(result);
-  } catch (error) {
-    return res.status(500).json({
-      message: "Internal Server Error",
-      error: error.message,
-    });
-  }
-};
+import Medication from "../model/MedicationsDB.js";
 
 // export const createMedicalRecord = async (req, res) => {
 //   let { medicalRecord_id, patient, doctor, ...otherFields } = req.body;
@@ -104,7 +77,7 @@ export let createMedicalRecord = async (req, res) => {
 
   try {
     if (medications && medications?.length > 0) {
-      let newMecicalrecord = new Dispensing({
+      let newMedicalRecord = new MedicalRecord({
         medicalRecord_id: req.body.medicalRecord_id,
         patient: req.body.patient,
         visittime: req.body.visittime,
@@ -115,27 +88,27 @@ export let createMedicalRecord = async (req, res) => {
         diagnosis: req.body.diagnosis,
         nursing_activities: req.body.nursing_activities,
         recommendations: req.body.recommendations,
-        medication_prescription: req.body.medicalRecord,
+        medication_prescription: req.body.medication_prescription, // แก้ไขตรงนี้
         dispensingItems: medications,
         total: total,
         medical_supplies: req.body.medical_supplies,
         remarks: req.body.remarks,
       });
 
-      const result = await newMecicalrecord.save();
+      const result = await newMedicalRecord.save();
       console.log("save ", result);
 
       if (result) {
-        const addedOrder = await Dispensing.findById(result._id)
+        const addedMedicalRecord = await MedicalRecord.findById(result._id)
           .populate({
             path: "dispensingItems.medicationRef",
             model: "Medication",
-          }) // Update path accordingly
+          })
           .exec();
 
-        if (addedOrder) {
-          console.log(JSON.stringify(addedOrder, null, "\t"));
-          res.json(addedOrder);
+        if (addedMedicalRecord) {
+          console.log(JSON.stringify(addedMedicalRecord, null, "\t"));
+          res.json(addedMedicalRecord);
         }
       } else {
         return res.status(400).send({
@@ -146,6 +119,34 @@ export let createMedicalRecord = async (req, res) => {
   } catch (err) {
     return res.status(400).send({
       errors: "Cannot process the order" + err.name,
+    });
+  }
+};
+
+export const listMedicalRecords = async (req, res) => {
+  try {
+    // Extracting query parameters
+    const { page = 1, pageSize = 15 } = req.query;
+
+    // Parsing the page and pageSize to integers
+    const pageNumber = parseInt(page);
+    const recordsPerPage = parseInt(pageSize);
+    // Calculate the skip value based on the page number and page size
+    const skip = (pageNumber - 1) * recordsPerPage;
+
+    // Query the database with pagination
+    const result = await MedicalRecord.find()
+      .populate("patient")
+      // .populate("doctor")
+      .skip(skip)
+      .limit(recordsPerPage)
+      .exec();
+
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
     });
   }
 };
