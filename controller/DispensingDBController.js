@@ -56,6 +56,7 @@ export let create = async (req, res) => {
     if (medications && medications?.length > 0) {
       let anOrder = new Dispensing({
         orderNo: now.toString(),
+        ddd: req.body.ddd,
         dispensingItems: medications,
         total: total,
       });
@@ -65,7 +66,10 @@ export let create = async (req, res) => {
 
       if (result) {
         const addedOrder = await Dispensing.findById(result._id)
-          .populate({ path: "dispensingItems.medicationRef" }) // Update path accordingly
+          .populate({
+            path: "dispensingItems.medicationRef",
+            model: "Medication",
+          }) // Update path accordingly
           .exec();
 
         if (addedOrder) {
@@ -82,5 +86,54 @@ export let create = async (req, res) => {
     return res.status(400).send({
       errors: "Cannot process the order" + err.name,
     });
+  }
+};
+
+// Get function
+export let get = async (req, res) => {
+  try {
+    const dispensings = await Dispensing.find();
+    res.status(200).json(dispensings);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+// Get by ID function
+export let getById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const dispensing = await Dispensing.findById(id);
+    if (!dispensing) {
+      return res.status(404).json({ message: "Dispensing not found" });
+    }
+    res.status(200).json(dispensing);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+// Put function
+export let put = async (req, res) => {
+  const { id } = req.params;
+  const { body } = req;
+  try {
+    const updatedDispensing = await Dispensing.findByIdAndUpdate(id, body, {
+      new: true,
+    });
+    res.status(200).json(updatedDispensing);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+// Delete function
+export let del = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await Dispensing.findByIdAndRemove(id);
+    res.status(200).json({ message: "Dispensing deleted successfully" });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 };

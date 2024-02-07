@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const DispensingSchema = new mongoose.Schema({
   orderNo: String,
+  ddd: String,
   dispensingItems: [
     {
       qty: Number,
