@@ -25,6 +25,7 @@ import ActivitiesRouter from "./router/activitiesRouter.js";
 import DispensingRouter from "./router/dispensingRouter.js";
 import ChecklistRouter from "./router/checklistRouter.js";
 import SystemRouter from "./router/sysyemreviewRouter.js";
+import GenaralRouter from "./router/generalRouter.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
@@ -66,6 +67,7 @@ app.use("/api/activities", ActivitiesRouter);
 app.use("/api/dispensing", DispensingRouter);
 app.use("/api/checklist", ChecklistRouter);
 app.use("/api/review", SystemRouter);
+app.use("/api/general",GenaralRouter)
 
 app.get("/", (req, res) => {
   res.status(401).send({ error: "Invalid Endport" });

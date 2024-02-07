@@ -1,5 +1,26 @@
 import Diagnosis from "../model/DiagnosisDB.js";
 
+//ค้นหา
+export const searchDiagnosis = async (req, res) => {
+  try {
+    const { diagnosis_name } = req.query;
+    // Build a query object based on search parameters
+    const query = {};
+    if (diagnosis_name) {
+      query.diagnosis_name = { $regex: new RegExp(diagnosis_name, "i") }; // เพิ่มการใช้ Regular Expression เพื่อค้นหาอักษรที่ตรงกับที่ระบุโดยไม่สนใจตัวพิมพ์เล็กหรือตัวพิมพ์ใหญ่
+    }
+
+    const result = await Diagnosis.find(query);
+
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
 export const createDiagnosis = async (req, res) => {
   const { diagnosis_id, diagnosis_name } = req.body;
 
@@ -10,20 +31,18 @@ export const createDiagnosis = async (req, res) => {
   }
 
   try {
-
     const duplicate = await Diagnosis.findOne({
       diagnosis_id: diagnosis_id,
     });
     if (duplicate) {
       return res.sendStatus(409);
     } else {
-       const newDiagnosis = await Diagnosis.create({
-         diagnosis_id,
-         diagnosis_name,
-       });
-       return res.status(201).json(newDiagnosis);
+      const newDiagnosis = await Diagnosis.create({
+        diagnosis_id,
+        diagnosis_name,
+      });
+      return res.status(201).json(newDiagnosis);
     }
-   
   } catch (error) {
     return res.status(500).json({
       message: "Internal Server Error",
