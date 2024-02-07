@@ -11,51 +11,6 @@ export const createMedicalRecord = async (req, res) => {
   }
 
   try {
-<<<<<<< HEAD
-    if (medications && medications?.length > 0) {
-      let newMedicalRecord = new MedicalRecord({
-        medicalRecord_id: req.body.medicalRecord_id,
-        patient: req.body.patient,
-        visittime: req.body.visittime,
-        visitdate: req.body.visitdate,
-        doctor: req.body.doctor,
-        chief_complaint: req.body.chief_complaint,
-        physical_exam: req.body.physical_exam,
-        diagnosis: req.body.diagnosis,
-        nursing_activities: req.body.nursing_activities,
-        recommendations: req.body.recommendations,
-        medication_prescription: req.body.medication_prescription, // แก้ไขตรงนี้
-        dispensingItems: medications,
-        total: total,
-        medical_supplies: req.body.medical_supplies,
-        remarks: req.body.remarks,
-      });
-
-      const result = await newMedicalRecord.save();
-      console.log("save ", result);
-
-      if (result) {
-        const addedMedicalRecord = await MedicalRecord.findById(result._id)
-          .populate({
-            path: "dispensingItems.medicationRef",
-            model: "Medication",
-          })
-          .exec();
-
-        if (addedMedicalRecord) {
-          console.log(JSON.stringify(addedMedicalRecord, null, "\t"));
-          res.json(addedMedicalRecord);
-        }
-      } else {
-        return res.status(400).send({
-          errors: "Cannot process the order",
-        });
-      }
-    }
-  } catch (err) {
-    return res.status(400).send({
-      errors: "Cannot process the order" + err.name,
-=======
     const newMedicalRecord = await MedicalRecord.create({
       medicalRecord_id,
       patient,
@@ -67,10 +22,106 @@ export const createMedicalRecord = async (req, res) => {
     return res.status(500).json({
       message: "Internal Server Error",
       error: error.message,
->>>>>>> parent of 484fe20 (commit add medical)
     });
   }
 };
+
+async function aggregateMedication(medical) {
+  let group = {};
+  let aggProd = [];
+
+  medical.forEach((e) => {
+    let key = e.id;
+    if (group.hasOwnProperty(key)) {
+      group[key].count += e.qty;
+    } else {
+      group[key] = { count: e.qty };
+    }
+  });
+
+  let arrIDs = Object.keys(group);
+
+  try {
+    const groupmedical = await Medication.find(
+      { medication_id: { $in: arrIDs } },
+      { medication_id: true, _id: true, price: true }
+    );
+
+    if (groupmedical && groupmedical.length > 0) {
+      let total = 0;
+      groupmedical.forEach((e) => {
+        let subtotal = group[e.medication_id].count * e.price;
+        aggProd.push({
+          medication_id: e._id, // Change to match your schema
+          unitPrice: e.price,
+          qty: group[e.medication_id].count,
+          subtotal: subtotal,
+        });
+        total += subtotal;
+      });
+
+      console.log("-----", aggProd);
+      return { medications: aggProd, total };
+    } else {
+      return {};
+    }
+  } catch (error) {
+    console.error("Error aggregating medication:", error);
+    return {};
+  }
+}
+// export let createMedicalRecord = async (req, res) => {
+//   var cart = req.body;
+//   var medication = cart.checkoutMedication;
+//   var { medications, total } = await aggregateMedication(medication);
+
+//   try {
+//     if (medications && medications?.length > 0) {
+//       let newMedicalRecord = new MedicalRecord({
+//         medicalRecord_id: req.body.medicalRecord_id,
+//         patient: req.body.patient,
+//         visittime: req.body.visittime,
+//         visitdate: req.body.visitdate,
+//         doctor: req.body.doctor,
+//         chief_complaint: req.body.chief_complaint,
+//         physical_exam: req.body.physical_exam,
+//         diagnosis: req.body.diagnosis,
+//         nursing_activities: req.body.nursing_activities,
+//         recommendations: req.body.recommendations,
+//         medication_prescription: req.body.medication_prescription, // แก้ไขตรงนี้
+//         dispensingItems: medications,
+//         total: total,
+//         medical_supplies: req.body.medical_supplies,
+//         remarks: req.body.remarks,
+//       });
+
+//       const result = await newMedicalRecord.save();
+//       console.log("save ", result);
+
+//       if (result) {
+//         const addedMedicalRecord = await MedicalRecord.findById(result._id)
+//           .populate({
+//             path: "dispensingItems.medicationRef",
+//             model: "Medication",
+//           })
+//           .exec();
+
+//         if (addedMedicalRecord) {
+//           console.log(JSON.stringify(addedMedicalRecord, null, "\t"));
+//           res.json(addedMedicalRecord);
+//         }
+//       } else {
+//         return res.status(400).send({
+//           errors: "Cannot process the order",
+//         });
+//       }
+//     }
+//   } catch (err) {
+//     return res.status(400).send({
+//       errors: "Cannot process the order" + err.name,
+//     });
+//   }
+// };
 
 export const listMedicalRecords = async (req, res) => {
   try {
@@ -106,6 +157,7 @@ export const getMedicalRecord = async (req, res) => {
   try {
     const medicalRecord = await MedicalRecord.findById(medicalRecord_id)
       .populate("patient")
+      // .populate("medicalion_dipensing")
       // .populate("doctor")
       .exec();
 
