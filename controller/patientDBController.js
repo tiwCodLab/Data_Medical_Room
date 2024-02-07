@@ -7,7 +7,7 @@ export const searchPatient = async (req, res) => {
     // Build a query object based on search parameters
     const query = {};
     if (student_id) {
-      query.student_id = student_id;
+      query.student_id = { $regex: new RegExp(student_id, "i") }; // เพิ่มการใช้ Regular Expression เพื่อค้นหาอักษรที่ตรงกับที่ระบุโดยไม่สนใจตัวพิมพ์เล็กหรือตัวพิมพ์ใหญ่
     }
 
     const result = await Patient.find(query)
