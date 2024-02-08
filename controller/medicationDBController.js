@@ -47,8 +47,15 @@ export const listMedications = async (req, res) => {
 };
 
 export const createMedication = async (req, res) => {
-  const { medication_id, medication_name, unit, price, quantity, properties } =
-    req.body;
+  const {
+    medication_id,
+    medication_name,
+    unit,
+    price,
+    stock,
+    used_quantity,
+    properties,
+  } = req.body;
 
   try {
     const duplicate = await Medication.findOne({
@@ -62,7 +69,8 @@ export const createMedication = async (req, res) => {
         medication_name,
         unit,
         price,
-        quantity,
+        stock,
+        used_quantity,
         properties,
       });
 
