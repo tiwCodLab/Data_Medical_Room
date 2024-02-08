@@ -1,38 +1,5 @@
 import Medication from "../model/MedicationsDB.js";
 
-// Endpoint for reducing medication stock
-// export const reduceMedicationStock = async (req, res) => {
-//   try {
-//     // Extract necessary data from request body
-//     const { medication_id, quantity } = req.body;
-
-//     // Check if medication exists
-//     const medication = await Medication.findById(medication_id);
-//     if (!medication) {
-//       return res.status(404).json({ message: "Medication not found" });
-//     }
-
-//     // Check if sufficient stock is available
-//     if (medication.stock < quantity) {
-//       return res.status(400).json({ message: "Insufficient stock" });
-//     }
-
-//     // Reduce medication stock
-//     medication.stock -= quantity;
-//     medication.used_quantity += quantity;
-
-//     // Save updated medication data
-//     await medication.save();
-
-//     // Return success message
-//     return res
-//       .status(200)
-//       .json({ message: "Medication stock reduced successfully" });
-//   } catch (error) {
-//     console.error("Error reducing medication stock:", error);
-//     return res.status(500).json({ message: "Internal Server Error" });
-//   }
-// };
 
 export const reduceMedicationStock = async (req, res) => {
   try {
@@ -61,8 +28,6 @@ export const reduceMedicationStock = async (req, res) => {
 
       // Reduce medication stock
       medication.stock -= quantity;
-
-      medication.used_quantity += quantity;
 
       // Save updated medication data
       await medication.save();
@@ -93,15 +58,8 @@ export const listMedications = async (req, res) => {
 };
 
 export const createMedication = async (req, res) => {
-  const {
-    medication_id,
-    medication_name,
-    unit,
-    price,
-    stock,
-    used_quantity,
-    properties,
-  } = req.body;
+  const { medication_id, medication_name, unit, price, stock, properties } =
+    req.body;
 
   try {
     const duplicate = await Medication.findOne({
@@ -116,7 +74,6 @@ export const createMedication = async (req, res) => {
         unit,
         price,
         stock,
-        used_quantity,
         properties,
       });
 

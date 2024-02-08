@@ -9,7 +9,6 @@ let medicationsSchema = new mongoose.Schema({
   properties: { type: String },
   quantity: { type: Number, default: 0 },
   stock: { type: Number, default: 0 },
-  used_quantity: { type: Number, default: 0 },
 });
 
 let Medication = mongoose.model("Medication", medicationsSchema, "medications");
