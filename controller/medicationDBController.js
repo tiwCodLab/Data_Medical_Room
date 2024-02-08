@@ -19,6 +19,7 @@ export const reduceMedicationStock = async (req, res) => {
 
     // Reduce medication stock
     medication.stock -= quantity;
+    medication.used_quantity += quantity;
 
     // Save updated medication data
     await medication.save();
