@@ -2,9 +2,16 @@ import MedicalRecord from "../model/MedicalRecordsDB.js";
 import Medication from "../model/MedicationsDB.js";
 
 export const createMedicalRecord = async (req, res) => {
-  let { medicalRecord_id, patient, doctor, medications, ...otherFields } =
-    req.body;
+  let {
+    medicalRecord_id,
+    patient,
+    doctor,
+    total,
+    medications,
+    ...otherFields
+  } = req.body;
   const messages = [];
+  var sum = 0;
 
   try {
     const medications_dis = []; // เตรียมอาร์เรย์สำหรับเก็บข้อมูลของแต่ละรายการยา
@@ -33,6 +40,8 @@ export const createMedicalRecord = async (req, res) => {
       // Reduce medication stock
       medication.stock -= quantity;
 
+      sum += medication.price * quantity;
+
       // Save updated medication data
       await medication.save();
 
@@ -41,7 +50,10 @@ export const createMedicalRecord = async (req, res) => {
       );
 
       // เพิ่มข้อมูลของแต่ละรายการยาเข้าไปในอาร์เรย์ medications_dis
-      medications_dis.push({ medical_name: medication_name, qty: quantity });
+      medications_dis.push({
+        medical_name: medication_name,
+        qty: quantity,
+      });
     }
 
     // Create Medical Record with medications_dis array
@@ -49,6 +61,7 @@ export const createMedicalRecord = async (req, res) => {
       medicalRecord_id,
       patient,
       doctor,
+      total: sum,
       medications_dis, // ส่ง medications_dis ที่เก็บข้อมูลของแต่ละรายการยา
       ...otherFields,
     });
@@ -63,7 +76,6 @@ export const createMedicalRecord = async (req, res) => {
     });
   }
 };
-
 
 export const listMedicalRecords = async (req, res) => {
   try {

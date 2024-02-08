@@ -16,6 +16,7 @@ const medicalRecordSchema = new mongoose.Schema({
     {
       medical_name: { type: String },
       qty: { type: Number, default: 0 },
+      total: { type: Number, default: 0 },
     },
   ],
   qty: { type: Number, default: 0 },
