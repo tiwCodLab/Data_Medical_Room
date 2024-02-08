@@ -1,6 +1,5 @@
 import Medication from "../model/MedicationsDB.js";
 
-
 export const reduceMedicationStock = async (req, res) => {
   try {
     // Extract necessary data from request body

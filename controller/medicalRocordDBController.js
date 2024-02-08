@@ -2,22 +2,60 @@ import MedicalRecord from "../model/MedicalRecordsDB.js";
 import Medication from "../model/MedicationsDB.js";
 
 export const createMedicalRecord = async (req, res) => {
-  let { medicalRecord_id, patient, doctor, ...otherFields } = req.body;
-
-  if (!medicalRecord_id || !patient || !doctor) {
-    return res.status(400).json({
-      message: "medicalRecord_id, patient, and doctor are required",
-    });
-  }
+  let { medicalRecord_id, patient, doctor, medications, ...otherFields } =
+    req.body;
+  const messages = [];
 
   try {
+    const medications_dis = []; // เตรียมอาร์เรย์สำหรับเก็บข้อมูลของแต่ละรายการยา
+
+    for (const item of medications) {
+      const { medication_name, quantity } = item;
+
+      // Check if medication exists
+      const medication = await Medication.findOne({
+        medication_name: medication_name,
+      });
+
+      if (!medication) {
+        messages.push(`Medication with name "${medication_name}" not found`);
+        continue; // ไปตรวจสอบรายการยาถัดไป
+      }
+
+      // Check if sufficient stock is available
+      if (medication.stock < quantity) {
+        messages.push(
+          `Insufficient stock for medication with name "${medication_name}"`
+        );
+        continue; // ไปตรวจสอบรายการยาถัดไป
+      }
+
+      // Reduce medication stock
+      medication.stock -= quantity;
+
+      // Save updated medication data
+      await medication.save();
+
+      messages.push(
+        `Stock reduced successfully for medication with name "${medication_name}"`
+      );
+
+      // เพิ่มข้อมูลของแต่ละรายการยาเข้าไปในอาร์เรย์ medications_dis
+      medications_dis.push({ medical_name: medication_name, qty: quantity });
+    }
+
+    // Create Medical Record with medications_dis array
     const newMedicalRecord = await MedicalRecord.create({
       medicalRecord_id,
       patient,
       doctor,
+      medications_dis, // ส่ง medications_dis ที่เก็บข้อมูลของแต่ละรายการยา
       ...otherFields,
     });
-    return res.status(201).json(newMedicalRecord);
+
+    messages.push(`Medical Record created`);
+
+    return res.status(201).json({ messages });
   } catch (error) {
     return res.status(500).json({
       message: "Internal Server Error",
@@ -25,6 +63,7 @@ export const createMedicalRecord = async (req, res) => {
     });
   }
 };
+
 
 export const listMedicalRecords = async (req, res) => {
   try {

@@ -2,7 +2,7 @@ import * as mongooseDef from "mongoose";
 let mongoose = mongooseDef.default;
 
 const medicalRecordSchema = new mongoose.Schema({
-  medicalRecord_id: { type: String, required: true },
+  medicalRecord_id: { type: String },
   patient: { type: mongoose.Schema.Types.ObjectId, ref: "Patient" },
   visittime: { type: String },
   visitdate: { type: String },
@@ -12,7 +12,12 @@ const medicalRecordSchema = new mongoose.Schema({
   diagnosis: { type: String },
   nursing_activities: { type: String },
   recommendations: { type: String },
-  medication_prescription: { type: String },
+  medications_dis: [
+    {
+      medical_name: { type: String },
+      qty: { type: Number, default: 0 },
+    },
+  ],
   qty: { type: Number, default: 0 },
   total: { type: Number, default: 0 },
   medical_supplies: { type: String },
