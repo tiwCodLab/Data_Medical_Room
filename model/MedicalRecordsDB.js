@@ -13,6 +13,8 @@ const medicalRecordSchema = new mongoose.Schema({
   nursing_activities: { type: String },
   recommendations: { type: String },
   medication_prescription: { type: String },
+  qty: { type: Number, default: 0 },
+  total: { type: Number, default: 0 },
   medical_supplies: { type: String },
   remarks: { type: String },
 });

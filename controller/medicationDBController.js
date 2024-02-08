@@ -1,33 +1,79 @@
 import Medication from "../model/MedicationsDB.js";
 
 // Endpoint for reducing medication stock
+// export const reduceMedicationStock = async (req, res) => {
+//   try {
+//     // Extract necessary data from request body
+//     const { medication_id, quantity } = req.body;
+
+//     // Check if medication exists
+//     const medication = await Medication.findById(medication_id);
+//     if (!medication) {
+//       return res.status(404).json({ message: "Medication not found" });
+//     }
+
+//     // Check if sufficient stock is available
+//     if (medication.stock < quantity) {
+//       return res.status(400).json({ message: "Insufficient stock" });
+//     }
+
+//     // Reduce medication stock
+//     medication.stock -= quantity;
+//     medication.used_quantity += quantity;
+
+//     // Save updated medication data
+//     await medication.save();
+
+//     // Return success message
+//     return res
+//       .status(200)
+//       .json({ message: "Medication stock reduced successfully" });
+//   } catch (error) {
+//     console.error("Error reducing medication stock:", error);
+//     return res.status(500).json({ message: "Internal Server Error" });
+//   }
+// };
+
 export const reduceMedicationStock = async (req, res) => {
   try {
     // Extract necessary data from request body
-    const { medication_id, quantity } = req.body;
+    const items = req.body.items; // รับรายการยาทั้งหมดจาก req.body
+    const messages = [];
 
-    // Check if medication exists
-    const medication = await Medication.findById(medication_id);
-    if (!medication) {
-      return res.status(404).json({ message: "Medication not found" });
+    // Iterate through each item
+    for (const item of items) {
+      const { medication_id, quantity } = item;
+
+      // Check if medication exists
+      const medication = await Medication.findById(medication_id);
+      if (!medication) {
+        messages.push(`Medication with ID ${medication_id} not found`);
+        continue; // ไปตรวจสอบรายการยาถัดไป
+      }
+
+      // Check if sufficient stock is available
+      if (medication.stock < quantity) {
+        messages.push(
+          `Insufficient stock for medication with ID ${medication_id}`
+        );
+        continue; // ไปตรวจสอบรายการยาถัดไป
+      }
+
+      // Reduce medication stock
+      medication.stock -= quantity;
+
+      medication.used_quantity += quantity;
+
+      // Save updated medication data
+      await medication.save();
+
+      messages.push(
+        `Stock reduced successfully for medication with ID ${medication_id}`
+      );
     }
 
-    // Check if sufficient stock is available
-    if (medication.stock < quantity) {
-      return res.status(400).json({ message: "Insufficient stock" });
-    }
-
-    // Reduce medication stock
-    medication.stock -= quantity;
-    medication.used_quantity += quantity;
-
-    // Save updated medication data
-    await medication.save();
-
-    // Return success message
-    return res
-      .status(200)
-      .json({ message: "Medication stock reduced successfully" });
+    // Return messages for each medication
+    return res.status(200).json({ messages });
   } catch (error) {
     console.error("Error reducing medication stock:", error);
     return res.status(500).json({ message: "Internal Server Error" });
