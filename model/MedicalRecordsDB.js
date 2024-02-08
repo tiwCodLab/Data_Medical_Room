@@ -13,18 +13,6 @@ const medicalRecordSchema = new mongoose.Schema({
   nursing_activities: { type: String },
   recommendations: { type: String },
   medication_prescription: { type: String },
-  // dispensingItems: [
-  //   {
-  //     qty: Number,
-  //     unitPrice: Number,
-  //     medicationRef: {
-  //       type: mongoose.Schema.Types.ObjectId,
-  //       ref: "Medication",
-  //     },
-  //     subtotal: Number,
-  //   },
-  // ],
-  // total: Number,
   medical_supplies: { type: String },
   remarks: { type: String },
 });

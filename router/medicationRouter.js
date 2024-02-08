@@ -5,23 +5,15 @@ import {
   getMedication,
   updateMedication,
   deleteMedication,
+  reduceMedicationStock,
 } from "../controller/medicationDBController.js";
 
 const medicaltionRouter = express.Router();
-
-// List all medications
 medicaltionRouter.get("/", listMedications);
-
-// Create a new medication
 medicaltionRouter.post("/", createMedication);
-
-// Get a specific medication by ID
 medicaltionRouter.get("/:medication_id", getMedication);
-
-// Update medication information
 medicaltionRouter.put("/:medication_id", updateMedication);
-
-// Delete a medication
 medicaltionRouter.delete("/:medication_id", deleteMedication);
+medicaltionRouter.post("/stock", reduceMedicationStock);
 
 export default medicaltionRouter;

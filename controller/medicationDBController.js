@@ -1,5 +1,38 @@
 import Medication from "../model/MedicationsDB.js";
 
+// Endpoint for reducing medication stock
+export const reduceMedicationStock = async (req, res) => {
+  try {
+    // Extract necessary data from request body
+    const { medication_id, quantity } = req.body;
+
+    // Check if medication exists
+    const medication = await Medication.findById(medication_id);
+    if (!medication) {
+      return res.status(404).json({ message: "Medication not found" });
+    }
+
+    // Check if sufficient stock is available
+    if (medication.stock < quantity) {
+      return res.status(400).json({ message: "Insufficient stock" });
+    }
+
+    // Reduce medication stock
+    medication.stock -= quantity;
+
+    // Save updated medication data
+    await medication.save();
+
+    // Return success message
+    return res
+      .status(200)
+      .json({ message: "Medication stock reduced successfully" });
+  } catch (error) {
+    console.error("Error reducing medication stock:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 export const listMedications = async (req, res) => {
   try {
     const result = await Medication.find();
