@@ -2,14 +2,7 @@ import MedicalRecord from "../model/MedicalRecordsDB.js";
 import Medication from "../model/MedicationsDB.js";
 
 export const createMedicalRecord = async (req, res) => {
-  let {
-    medicalRecord_id,
-    patient,
-    doctor,
-    total,
-    medications,
-    ...otherFields
-  } = req.body;
+  let { total, medications, ...otherFields } = req.body;
   const messages = [];
   var sum = 0;
 
@@ -31,10 +24,9 @@ export const createMedicalRecord = async (req, res) => {
 
       // Check if sufficient stock is available
       if (medication.stock < quantity) {
-        messages.push(
-          `Insufficient stock for medication with name "${medication_name}"`
-        );
-        continue; // ไปตรวจสอบรายการยาถัดไป
+        return res.status(400).json({
+          error: `Insufficient stock for medication with name "${medication_name}"`,
+        });
       }
 
       // Reduce medication stock
@@ -58,17 +50,12 @@ export const createMedicalRecord = async (req, res) => {
 
     // Create Medical Record with medications_dis array
     const newMedicalRecord = await MedicalRecord.create({
-      medicalRecord_id,
-      patient,
-      doctor,
       total: sum,
       medications_dis, // ส่ง medications_dis ที่เก็บข้อมูลของแต่ละรายการยา
       ...otherFields,
     });
-
     messages.push(`Medical Record created`);
-
-    return res.status(201).json({ messages });
+    return res.status(201).json(newMedicalRecord);
   } catch (error) {
     return res.status(500).json({
       message: "Internal Server Error",
