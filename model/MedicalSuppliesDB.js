@@ -6,7 +6,7 @@ let medicalsuppliesShema = new mongoose.Schema({
   medical_supplies_name: { type: String },
   unit: { type: String },
   price: { type: Number },
-  quantity: { type: Number },
+  stock: { type: Number },
   properties: { type: String },
 });
 

@@ -1,13 +1,16 @@
 import MedicalRecord from "../model/MedicalRecordsDB.js";
 import Medication from "../model/MedicationsDB.js";
+import Medicalsupplies from "../model/MedicalSuppliesDB.js";
 
 export const createMedicalRecord = async (req, res) => {
-  let { total, medications, ...otherFields } = req.body;
+  let { total, medications, supplies, ...otherFields } = req.body;
   const messages = [];
   var sum = 0;
+  var sum_supplies = 0;
 
   try {
     const medications_dis = []; // เตรียมอาร์เรย์สำหรับเก็บข้อมูลของแต่ละรายการยา
+    const medical_supplies = [];
 
     for (const item of medications) {
       const { medication_name, quantity } = item;
@@ -48,10 +51,52 @@ export const createMedicalRecord = async (req, res) => {
       });
     }
 
+    for (const item of supplies) {
+      const { medical_supplies_name, quantity } = item;
+
+      // Check if medical supply exists
+      const medicalSupply = await Medicalsupplies.findOne({
+        medical_supplies_name: medical_supplies_name,
+      });
+
+      if (!medicalSupply) {
+        messages.push(
+          `Medical supply with name "${medical_supplies_name}" not found`
+        );
+        continue; // ไปตรวจสอบรายการอุปกรณ์ทางการแพทย์ถัดไป
+      }
+
+      // Check if sufficient stock is available
+      if (medicalSupply.stock < quantity) {
+        return res.status(400).json({
+          error: `Insufficient stock for medical supply with name "${medical_supplies_name}"`,
+        });
+      }
+
+      // Reduce medical supply stock
+      medicalSupply.stock -= quantity;
+      sum_supplies += medicalSupply.price * quantity;
+
+      // Save updated medical supply data
+      await medicalSupply.save();
+
+      messages.push(
+        `Stock reduced successfully for medical supply with name "${medical_supplies_name}"`
+      );
+
+      // เพิ่มข้อมูลของแต่ละรายการอุปกรณ์ทางการแพทย์เข้าไปในอาร์เรย์ supplies_dis
+      medical_supplies.push({
+        supplies_name: medical_supplies_name,
+        qty: quantity,
+      });
+    }
+
     // Create Medical Record with medications_dis array
     const newMedicalRecord = await MedicalRecord.create({
-      total: sum,
+      total_price_medications: sum,
+      total_price_supplies: sum_supplies,
       medications_dis, // ส่ง medications_dis ที่เก็บข้อมูลของแต่ละรายการยา
+      medical_supplies,
       ...otherFields,
     });
     messages.push(`Medical Record created`);
