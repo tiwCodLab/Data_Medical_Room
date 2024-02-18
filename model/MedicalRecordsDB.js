@@ -1,4 +1,5 @@
 import * as mongooseDef from "mongoose";
+import moment from "moment";
 let mongoose = mongooseDef.default;
 
 const medicalRecordSchema = new mongoose.Schema({

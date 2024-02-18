@@ -230,3 +230,162 @@ export const getMedicalRecordsByPatientId = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+// Function to get summary of diagnosis
+export const getDiagnosisSummaryByDateRange = async (req, res) => {
+  try {
+    // Extract start date and end date from request query
+    const { startDate, endDate } = req.query;
+
+    let query = {}; // Initialize an empty query object
+
+    // Check if start date and end date are provided
+    if (startDate && endDate) {
+      query = {
+        visitdate: {
+          $gte: startDate, // Greater than or equal to start date
+          $lte: endDate, // Less than or equal to end date
+        },
+      };
+    }
+
+    // Query MongoDB to get medical records based on the query
+    const medicalRecords = await MedicalRecord.find(query);
+
+    // Initialize an object to store diagnosis summary
+    const diagnosisSummary = {};
+
+    // Iterate through each medical record within the specified date range
+    medicalRecords.forEach((record) => {
+      // Get the diagnosis from each record
+      const diagnosis = record.diagnosis;
+
+      // If the diagnosis exists
+      if (diagnosis) {
+        // Check if the diagnosis already exists in the summary
+        if (diagnosisSummary[diagnosis]) {
+          // If it exists, increment the count
+          diagnosisSummary[diagnosis]++;
+        } else {
+          // If it doesn't exist, initialize the count to 1
+          diagnosisSummary[diagnosis] = 1;
+        }
+      }
+    });
+
+    // Return the diagnosis summary
+    return res.status(200).json(diagnosisSummary);
+  } catch (error) {
+    // Return an error if something goes wrong
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+export const getnursingactivitiesSummaryByDateRange = async (req, res) => {
+  try {
+    // Extract start date and end date from request query
+    const { startDate, endDate } = req.query;
+
+    let query = {}; // Initialize an empty query object
+
+    // Check if start date and end date are provided
+    if (startDate && endDate) {
+      query = {
+        visitdate: {
+          $gte: startDate, // Greater than or equal to start date
+          $lte: endDate, // Less than or equal to end date
+        },
+      };
+    }
+
+    // Query MongoDB to get medical records based on the query
+    const medicalRecords = await MedicalRecord.find(query);
+
+    // Initialize an object to store diagnosis summary
+    const diagnosisSummary = {};
+
+    // Iterate through each medical record within the specified date range
+    medicalRecords.forEach((record) => {
+      // Get the diagnosis from each record
+      const nursing_activities = record.nursing_activities;
+
+      // If the diagnosis exists
+      if (nursing_activities) {
+        // Check if the diagnosis already exists in the summary
+        if (diagnosisSummary[nursing_activities]) {
+          // If it exists, increment the count
+          diagnosisSummary[nursing_activities]++;
+        } else {
+          // If it doesn't exist, initialize the count to 1
+          diagnosisSummary[nursing_activities] = 1;
+        }
+      }
+    });
+
+    // Return the diagnosis summary
+    return res.status(200).json(diagnosisSummary);
+  } catch (error) {
+    // Return an error if something goes wrong
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+export const getOrganizations = async (req, res) => {
+  try {
+    // Extract start date and end date from request query
+    const { startDate, endDate } = req.query;
+
+    let query = {}; // Initialize an empty query object
+
+    // Check if start date and end date are provided
+    if (startDate && endDate) {
+      query = {
+        visitdate: {
+          $gte: startDate, // Greater than or equal to start date
+          $lte: endDate, // Less than or equal to end date
+        },
+      };
+    }
+
+    // Query MongoDB to get medical records based on the query
+    const medicalRecords = await MedicalRecord.find(query)
+      .populate("patient")
+      .exec();
+
+    // Initialize an object to store diagnosis summary
+    const diagnosisSummary = {};
+
+    // Iterate through each medical record within the specified date range
+    medicalRecords.forEach((record) => {
+      // Get the diagnosis from each record
+      const patient = record.patient.organizations;
+
+      // If the diagnosis exists
+      if (patient) {
+        // Check if the diagnosis already exists in the summary
+        if (diagnosisSummary[patient]) {
+          // If it exists, increment the count
+          diagnosisSummary[patient]++;
+        } else {
+          // If it doesn't exist, initialize the count to 1
+          diagnosisSummary[patient] = 1;
+        }
+      }
+    });
+
+    // Return the diagnosis summary
+    return res.status(200).json(diagnosisSummary);
+  } catch (error) {
+    // Return an error if something goes wrong
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
