@@ -1,6 +1,6 @@
 let dbURI =
   "mongodb+srv://admin:admin2567@cluster0.oj2rdfm.mongodb.net/Data_Medical_Room";
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "medical") {
   dbURI = process.env.MONGO_URI ? process.env.MONGO_URI : dbURI; // production DB server
 }
 

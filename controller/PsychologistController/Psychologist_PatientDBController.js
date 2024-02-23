@@ -1,4 +1,4 @@
-import Patient from "../model/PatientsDB.js";
+import Patient from "../../model/psychologist/Psychologist_PatientDB.js";
 
 //ค้นหา
 export const searchPatient = async (req, res) => {
@@ -26,7 +26,7 @@ export const searchPatient = async (req, res) => {
 
 export const listPatient = async (req, res) => {
   try {
-    const { page = 1, pageSize = 30 } = req.query;
+    const { page = 1, pageSize = 35 } = req.query;
 
     // Calculate skip value based on page and page size
     const skip = (page - 1) * pageSize;
@@ -49,13 +49,7 @@ export const listPatient = async (req, res) => {
 
 export const createPatient = async (req, res) => {
   const {
-    patient_id,
     student_id,
-    patient_fname,
-    patient_lname,
-    status,
-    organizations,
-    age,
   } = req.body;
 
   try {

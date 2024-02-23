@@ -112,7 +112,7 @@ export const createMedicalRecord = async (req, res) => {
 export const listMedicalRecords = async (req, res) => {
   try {
     // Extracting query parameters
-    const { page = 1, pageSize = 15 } = req.query;
+    const { page = 1, pageSize = 30 } = req.query;
 
     // Parsing the page and pageSize to integers
     const pageNumber = parseInt(page);
@@ -234,28 +234,13 @@ export const getMedicalRecordsByPatientId = async (req, res) => {
 // Function to get summary of diagnosis
 export const getDiagnosisSummaryByDateRange = async (req, res) => {
   try {
-    // Extract start date and end date from request query
-    const { startDate, endDate } = req.query;
-
-    let query = {}; // Initialize an empty query object
-
-    // Check if start date and end date are provided
-    if (startDate && endDate) {
-      query = {
-        visitdate: {
-          $gte: startDate, // Greater than or equal to start date
-          $lte: endDate, // Less than or equal to end date
-        },
-      };
-    }
-
-    // Query MongoDB to get medical records based on the query
-    const medicalRecords = await MedicalRecord.find(query);
+    // Query MongoDB to get all medical records
+    const medicalRecords = await MedicalRecord.find();
 
     // Initialize an object to store diagnosis summary
     const diagnosisSummary = {};
 
-    // Iterate through each medical record within the specified date range
+    // Iterate through each medical record
     medicalRecords.forEach((record) => {
       // Get the diagnosis from each record
       const diagnosis = record.diagnosis;
@@ -286,23 +271,8 @@ export const getDiagnosisSummaryByDateRange = async (req, res) => {
 
 export const getnursingactivitiesSummaryByDateRange = async (req, res) => {
   try {
-    // Extract start date and end date from request query
-    const { startDate, endDate } = req.query;
-
-    let query = {}; // Initialize an empty query object
-
-    // Check if start date and end date are provided
-    if (startDate && endDate) {
-      query = {
-        visitdate: {
-          $gte: startDate, // Greater than or equal to start date
-          $lte: endDate, // Less than or equal to end date
-        },
-      };
-    }
-
     // Query MongoDB to get medical records based on the query
-    const medicalRecords = await MedicalRecord.find(query);
+    const medicalRecords = await MedicalRecord.find();
 
     // Initialize an object to store diagnosis summary
     const diagnosisSummary = {};
@@ -338,23 +308,8 @@ export const getnursingactivitiesSummaryByDateRange = async (req, res) => {
 
 export const getOrganizations = async (req, res) => {
   try {
-    // Extract start date and end date from request query
-    const { startDate, endDate } = req.query;
-
-    let query = {}; // Initialize an empty query object
-
-    // Check if start date and end date are provided
-    if (startDate && endDate) {
-      query = {
-        visitdate: {
-          $gte: startDate, // Greater than or equal to start date
-          $lte: endDate, // Less than or equal to end date
-        },
-      };
-    }
-
-    // Query MongoDB to get medical records based on the query
-    const medicalRecords = await MedicalRecord.find(query)
+  
+    const medicalRecords = await MedicalRecord.find()
       .populate("patient")
       .exec();
 

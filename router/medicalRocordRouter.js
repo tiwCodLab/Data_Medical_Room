@@ -11,8 +11,6 @@ import {
   getOrganizations,
 } from "../controller/medicalRocordDBController.js";
 
-import { reduceMedicationStock } from "../controller/medicationDBController.js";
-
 const medicalRecordRouter = express.Router();
 
 // GET all medical records
