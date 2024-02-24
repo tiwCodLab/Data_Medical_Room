@@ -2,7 +2,10 @@ import * as mongooseDef from "mongoose";
 let mongoose = mongooseDef.default;
 
 const CounselingSchema = new mongoose.Schema({
-  patient: { type: mongoose.Schema.Types.ObjectId, ref: "Patient" },
+  patient: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Psychologist_Patient",
+  },
   visittime: { type: String },
   visitdate: { type: String },
   psychologist: { type: String },
@@ -11,6 +14,7 @@ const CounselingSchema = new mongoose.Schema({
   problems: { type: String },
   behavior: { type: String },
   counseling_result: { type: String },
+  counseling_plan: { type: String },
   assistance: { type: String },
   form_2q: { type: String },
   form_9q: { type: String },
@@ -18,7 +22,8 @@ const CounselingSchema = new mongoose.Schema({
   form_st_5: { type: String },
   form_gad: { type: String },
   remarks: { type: String },
-  appointment: { type: String },
+  appointment_date: { type: String },
+  appointment_time: { type: String },
 });
 
 let CounselingRecord = mongoose.model(

@@ -308,7 +308,6 @@ export const getnursingactivitiesSummaryByDateRange = async (req, res) => {
 
 export const getOrganizations = async (req, res) => {
   try {
-  
     const medicalRecords = await MedicalRecord.find()
       .populate("patient")
       .exec();

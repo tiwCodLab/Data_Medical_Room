@@ -14,7 +14,9 @@ const createCounselingRecord = async (req, res) => {
 // Controller function เพื่อดึงข้อมูล counseling record ทั้งหมด
 const getAllCounselingRecords = async (req, res) => {
   try {
-    const counselingRecords = await CounselingRecord.find();
+    const counselingRecords = await CounselingRecord.find()
+      .populate("patient")
+      .exec();
     res.status(200).json(counselingRecords);
   } catch (error) {
     res.status(500).json({ message: error.message });
