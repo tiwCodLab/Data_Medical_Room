@@ -1,10 +1,28 @@
 import CounselingRecord from "../../model/psychologist/Psy_CounselingRecorcdDB.js"; // ต้องแก้ไข path ให้เป็นที่ถูกต้องตามโครงสร้างโปรเจค
-
+import Appoinment from "../../model/psychologist/Psy_AppointmentDB.js";
 // Controller function เพื่อสร้าง counseling record ใหม่
 const createCounselingRecord = async (req, res) => {
+  let { patient, appointment_date, appointment_time, ...otherFields } =
+    req.body;
   try {
-    const counselingRecord = new CounselingRecord(req.body);
+    // สร้าง CounselingRecord ใหม่
+    const counselingRecord = new CounselingRecord({
+      patient: patient,
+      appointment_date: appointment_date,
+      appointment_time: appointment_time,
+      ...otherFields,
+    });
     await counselingRecord.save();
+
+    // สร้าง Appointment ใหม่
+    const appointment = new Appoinment({
+      patient: patient,
+      appointment_date: appointment_date,
+      appointment_time: appointment_time,
+      status: true,
+    });
+    await appointment.save();
+
     res.status(201).json(counselingRecord);
   } catch (error) {
     res.status(400).json({ message: error.message });

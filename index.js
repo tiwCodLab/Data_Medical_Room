@@ -28,6 +28,7 @@ import SystemRouter from "./router/sysyemreviewRouter.js";
 import GenaralRouter from "./router/generalRouter.js";
 import psychologist_patientRouter from "./router/psychologistRouter/psychologist_patientRouter.js";
 import counselingRouter from "./router/psychologistRouter/psy_counselingRouter.js";
+import AppoinmentRouter from "./router/psychologistRouter/psy_appoinmetnRouter.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
@@ -74,6 +75,7 @@ app.use("/api/general", GenaralRouter);
 //rest api Psychologis
 app.use("/api/psypatient", psychologist_patientRouter);
 app.use("/api/counseling", counselingRouter);
+app.use("/api/appoinment", AppoinmentRouter);
 
 app.get("/", (req, res) => {
   res.status(401).send({ error: "Invalid Endport" });
