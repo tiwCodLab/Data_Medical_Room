@@ -1,7 +1,6 @@
 import * as mongooseDef from "mongoose";
 let mongoose = mongooseDef.default;
 const patientSchema = new mongoose.Schema({
-  patient_id: { type: String },
   student_id: { type: String },
   prefix: { type: String },
   patient_fname: { type: String },

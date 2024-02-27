@@ -46,10 +46,17 @@ export const listPatient = async (req, res) => {
     });
   }
 };
+function generateStudentID() {
+  let studentID = "63025"; // นำค่าเริ่มต้นของรหัสนักศึกษาเข้ามาก่อน
+  for (let i = 0; i < 5; i++) {
+    // เพิ่มตัวเลขสุ่ม 5 ตัวเข้าไปในรหัสนักศึกษา
+    studentID += Math.floor(Math.random() * 10); // สุ่มตัวเลขจาก 0 ถึง 9
+  }
+  return studentID;
+}
 
 export const createPatient = async (req, res) => {
   const {
-    patient_id,
     student_id,
     patient_fname,
     patient_lname,
@@ -158,3 +165,4 @@ export const deletePatient = async (req, res) => {
     });
   }
 };
+

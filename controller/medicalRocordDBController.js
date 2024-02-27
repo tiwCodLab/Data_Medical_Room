@@ -1,13 +1,14 @@
 import MedicalRecord from "../model/MedicalRecordsDB.js";
 import Medication from "../model/MedicationsDB.js";
 import Medicalsupplies from "../model/MedicalSuppliesDB.js";
+import Patient from "../model/PatientsDB.js";
+import User from "../model/UserDB.js";
 
 export const createMedicalRecord = async (req, res) => {
   let { total, medications, supplies, ...otherFields } = req.body;
   const messages = [];
   var sum = 0;
   var sum_supplies = 0;
-
   try {
     const medications_dis = []; // เตรียมอาร์เรย์สำหรับเก็บข้อมูลของแต่ละรายการยา
     const medical_supplies = [];
@@ -112,7 +113,7 @@ export const createMedicalRecord = async (req, res) => {
 export const listMedicalRecords = async (req, res) => {
   try {
     // Extracting query parameters
-    const { page = 1, pageSize = 30 } = req.query;
+    const { page = 1, pageSize = 100 } = req.query;
 
     // Parsing the page and pageSize to integers
     const pageNumber = parseInt(page);
@@ -231,115 +232,14 @@ export const getMedicalRecordsByPatientId = async (req, res) => {
   }
 };
 
-// Function to get summary of diagnosis
-export const getDiagnosisSummaryByDateRange = async (req, res) => {
+export const getMedicalRecordsCount = async (req, res) => {
   try {
-    // Query MongoDB to get all medical records
-    const medicalRecords = await MedicalRecord.find();
-
-    // Initialize an object to store diagnosis summary
-    const diagnosisSummary = {};
-
-    // Iterate through each medical record
-    medicalRecords.forEach((record) => {
-      // Get the diagnosis from each record
-      const diagnosis = record.diagnosis;
-
-      // If the diagnosis exists
-      if (diagnosis) {
-        // Check if the diagnosis already exists in the summary
-        if (diagnosisSummary[diagnosis]) {
-          // If it exists, increment the count
-          diagnosisSummary[diagnosis]++;
-        } else {
-          // If it doesn't exist, initialize the count to 1
-          diagnosisSummary[diagnosis] = 1;
-        }
-      }
-    });
-
-    // Return the diagnosis summary
-    return res.status(200).json(diagnosisSummary);
+    const recordCount = await MedicalRecord.countDocuments();
+    const patientCount = await Patient.countDocuments();
+    const userCont = await User.countDocuments();
+    res.json({ patientCount, recordCount, userCont });
   } catch (error) {
-    // Return an error if something goes wrong
-    return res.status(500).json({
-      message: "Internal Server Error",
-      error: error.message,
-    });
-  }
-};
-
-export const getnursingactivitiesSummaryByDateRange = async (req, res) => {
-  try {
-    // Query MongoDB to get medical records based on the query
-    const medicalRecords = await MedicalRecord.find();
-
-    // Initialize an object to store diagnosis summary
-    const diagnosisSummary = {};
-
-    // Iterate through each medical record within the specified date range
-    medicalRecords.forEach((record) => {
-      // Get the diagnosis from each record
-      const nursing_activities = record.nursing_activities;
-
-      // If the diagnosis exists
-      if (nursing_activities) {
-        // Check if the diagnosis already exists in the summary
-        if (diagnosisSummary[nursing_activities]) {
-          // If it exists, increment the count
-          diagnosisSummary[nursing_activities]++;
-        } else {
-          // If it doesn't exist, initialize the count to 1
-          diagnosisSummary[nursing_activities] = 1;
-        }
-      }
-    });
-
-    // Return the diagnosis summary
-    return res.status(200).json(diagnosisSummary);
-  } catch (error) {
-    // Return an error if something goes wrong
-    return res.status(500).json({
-      message: "Internal Server Error",
-      error: error.message,
-    });
-  }
-};
-
-export const getOrganizations = async (req, res) => {
-  try {
-    const medicalRecords = await MedicalRecord.find()
-      .populate("patient")
-      .exec();
-
-    // Initialize an object to store diagnosis summary
-    const diagnosisSummary = {};
-
-    // Iterate through each medical record within the specified date range
-    medicalRecords.forEach((record) => {
-      // Get the diagnosis from each record
-      const patient = record.patient.organizations;
-
-      // If the diagnosis exists
-      if (patient) {
-        // Check if the diagnosis already exists in the summary
-        if (diagnosisSummary[patient]) {
-          // If it exists, increment the count
-          diagnosisSummary[patient]++;
-        } else {
-          // If it doesn't exist, initialize the count to 1
-          diagnosisSummary[patient] = 1;
-        }
-      }
-    });
-
-    // Return the diagnosis summary
-    return res.status(200).json(diagnosisSummary);
-  } catch (error) {
-    // Return an error if something goes wrong
-    return res.status(500).json({
-      message: "Internal Server Error",
-      error: error.message,
-    });
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };

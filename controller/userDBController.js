@@ -102,3 +102,14 @@ export const put = async (req, res) => {
     });
   }
 };
+
+
+export const getUserCount = async (req, res) => {
+  try {
+    const userCount = await User.countDocuments();
+    res.json({ userCount });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
