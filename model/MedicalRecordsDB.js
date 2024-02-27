@@ -12,6 +12,18 @@ const medicalRecordSchema = new mongoose.Schema({
   skin_color_detail: { type: String },
   chest_size: { type: String },
   chest_size_detail: { type: String },
+
+  breathingRate: { type: String },
+  breathingRate_detail: { type: String },
+  lungTube: { type: String },
+  lungTube_detail: { type: String },
+  ribCage: { type: String },
+  ribCage_detail: { type: String },
+  chestExpansion: { type: String },
+  chestExpansion_detail: { type: String },
+  abnormalBreathSounds: { type: String },
+  abnormalBreathSounds_detail: { type: String },
+
   yellow_gland: { type: String },
   yellow_gland_detail: { type: String },
   breathing_sound: { type: String },
