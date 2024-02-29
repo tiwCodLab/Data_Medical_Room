@@ -9,6 +9,7 @@ const patientSchema = new mongoose.Schema({
   organizations: { type: String },
   // status: { type: mongoose.Schema.Types.ObjectId, ref: "Status" },
   // organizations: { type: mongoose.Schema.Types.ObjectId, ref: "Organizations" },
+  birthday: { type: String },
   age: { type: Number },
   email: { type: String },
   phonenumber: { type: String },
@@ -23,6 +24,7 @@ patientSchema.method.toProfileJSON = function () {
     status: this.status,
     organizations: this.organizations,
     age: this.age,
+    birthday: this.birthday,
     email: this.email,
     phonenumber: this.phonenumber,
   };
