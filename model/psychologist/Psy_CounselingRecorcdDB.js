@@ -4,7 +4,7 @@ let mongoose = mongooseDef.default;
 const CounselingSchema = new mongoose.Schema({
   patient: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Psychologist_Patient",
+    ref: "Patient",
   },
   visittime: { type: String },
   visitdate: { type: String },
