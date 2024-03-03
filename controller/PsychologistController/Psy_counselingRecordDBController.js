@@ -44,7 +44,9 @@ const getAllCounselingRecords = async (req, res) => {
 // Controller function เพื่อดึงข้อมูล counseling record ตาม ID
 const getCounselingRecordById = async (req, res) => {
   try {
-    const counselingRecord = await CounselingRecord.findById(req.params.id);
+    const counselingRecord = await CounselingRecord.findById(req.params.id)
+      .populate("patient")
+      .exec();
     if (!counselingRecord) {
       return res.status(404).json({ message: "Counseling record not found" });
     }
