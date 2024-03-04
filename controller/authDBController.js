@@ -1,12 +1,12 @@
 import User from "../model/UserDB.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-const signToken = (username, firstname, roles) => {
+const signToken = (username, name, roles) => {
   return jwt.sign(
     {
       UserInfo: {
         username: username,
-        firstname: firstname, // เปลี่ยน name เป็น firstname เพื่อให้สอดคล้องกับการใช้งานในฟังก์ชัน handleRefreshToken ที่ใช้ชื่อ firstname
+        firstname: name, // เปลี่ยน name เป็น firstname เพื่อให้สอดคล้องกับการใช้งานในฟังก์ชัน handleRefreshToken ที่ใช้ชื่อ firstname
         roles: roles,
       },
     },
@@ -14,7 +14,7 @@ const signToken = (username, firstname, roles) => {
     {
       expiresIn: process.env.ACCESS_TOKEN_TIME
         ? process.env.ACCESS_TOKEN_TIME
-        : "3600s", // 30min
+        : "1200s", // 20min
     }
   );
 };
