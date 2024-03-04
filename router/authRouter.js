@@ -5,10 +5,10 @@ import {
   handleLogout,
   handleRefreshToken,
 } from "../controller/authDBController.js";
-let router = express.Router();
-router.post("/", handleLogin);
-router.get("/", handleLogout);
+let authRouters = express.Router();
+authRouters.post("/", handleLogin);
+authRouters.get("/", handleLogout);
 
-router.get("/refresh", handleRefreshToken);
-router.post("/register", create);
-export default router;
+authRouters.get("/refresh", handleRefreshToken);
+authRouters.post("/register", create);
+export default authRouters;

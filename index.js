@@ -13,7 +13,7 @@ import verifyJWT from "./middleware/verifyJWT.js";
 // routers
 import productRouter from "./router/productRouter.js";
 import userRouter from "./router/userRouter.js";
-import authRouter from "./router/authRouter.js";
+import authRouters from "./router/authRouter.js";
 import patientRouter from "./router/patientRouter.js";
 import statusRouter from "./router/statusRouter.js";
 import organizationRouter from "./router/organizationRouter.js";
@@ -51,7 +51,7 @@ app.use(cookieParser());
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 app.use("/", express.static(__dirname + "/public"));
 // routes
-app.use("/auth", authRouter); // register, login, logout, refreshToken
+app.use("/auth", authRouters); // register, login, logout, refreshToken
 // test to verify JWT
 app.get("/secret", verifyJWT, (req, res) =>
   res.json({ success: true, message: "Secret Page" })
