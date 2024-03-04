@@ -1,24 +1,21 @@
 import User from "../model/UserDB.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-const signToken = (username, name, roles) => {
+const signToken = (username, firstname, roles) => {
   return jwt.sign(
     {
       UserInfo: {
         username: username,
-        firstname: name, // เปลี่ยน name เป็น firstname เพื่อให้สอดคล้องกับการใช้งานในฟังก์ชัน handleRefreshToken ที่ใช้ชื่อ firstname
+        firstname: firstname,
         roles: roles,
       },
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
-      expiresIn: process.env.ACCESS_TOKEN_TIME
-        ? process.env.ACCESS_TOKEN_TIME
-        : "1200s", // 20min
+      expiresIn: "1200s", // 20min
     }
   );
 };
-
 const handleLogin = async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password)
@@ -119,12 +116,14 @@ const handleRefreshToken = async (req, res) => {
   try {
     const foundUser = await User.findByRefreshToken(refreshToken);
     if (foundUser) {
+      // Evaluate JWT
       jwt.verify(
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET,
         (err, decoded) => {
           if (err || foundUser.username !== decoded.username)
             return res.sendStatus(403);
+          // Refresh Token is valid, generate new Access Token
           const roles = Object.values(foundUser.roles);
           const accessToken = signToken(
             decoded.username,
@@ -135,11 +134,13 @@ const handleRefreshToken = async (req, res) => {
         }
       );
     } else {
+      // No user found with the given Refresh Token
       return res.sendStatus(403); //"Error Unauthorized"
     }
   } catch (error) {
-    return res.status(403).send(error.message); //"Error Unauthorized"
-  } //Forbidden
+    console.error("Error handling refresh token:", error);
+    return res.status(403).send("Error Unauthorized"); //"Error Unauthorized"
+  }
 };
 
 // const handleRefreshToken = async (req, res) => {
