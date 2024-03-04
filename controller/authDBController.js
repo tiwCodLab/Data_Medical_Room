@@ -110,6 +110,7 @@ const handleLogout = async (req, res) => {
   });
   res.sendStatus(204);
 };
+
 const handleRefreshToken = async (req, res) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) return res.sendStatus(401);
@@ -117,10 +118,8 @@ const handleRefreshToken = async (req, res) => {
   try {
     const foundUser = await User.findByRefreshToken(refreshToken);
     if (foundUser) {
-      // evaluate jwt
       jwt.verify(
         refreshToken,
-
         process.env.REFRESH_TOKEN_SECRET,
         (err, decoded) => {
           if (err || foundUser.username !== decoded.username)
@@ -134,9 +133,41 @@ const handleRefreshToken = async (req, res) => {
           res.json({ roles, accessToken });
         }
       );
-    } else return res.status(403).send(error); //"Error Unauthorized"
+    } else {
+      return res.sendStatus(403); //"Error Unauthorized"
+    }
   } catch (error) {
-    return res.status(403).send(error); //"Error Unauthorized"
+    return res.status(403).send(error.message); //"Error Unauthorized"
   } //Forbidden
 };
+
+// const handleRefreshToken = async (req, res) => {
+//   const cookies = req.cookies;
+//   if (!cookies?.jwt) return res.sendStatus(401);
+//   const refreshToken = cookies.jwt;
+//   try {
+//     const foundUser = await User.findByRefreshToken(refreshToken);
+//     if (foundUser) {
+//       // evaluate jwt
+//       jwt.verify(
+//         refreshToken,
+
+//         process.env.REFRESH_TOKEN_SECRET,
+//         (err, decoded) => {
+//           if (err || foundUser.username !== decoded.username)
+//             return res.sendStatus(403);
+//           const roles = Object.values(foundUser.roles);
+//           const accessToken = signToken(
+//             decoded.username,
+//             foundUser.firstname,
+//             roles
+//           );
+//           res.json({ roles, accessToken });
+//         }
+//       );
+//     } else return res.status(403).send(error); //"Error Unauthorized"
+//   } catch (error) {
+//     return res.status(403).send(error); //"Error Unauthorized"
+//   } //Forbidden
+// };
 export { handleLogin, handleLogout, handleRefreshToken };
