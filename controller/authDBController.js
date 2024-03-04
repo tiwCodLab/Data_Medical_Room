@@ -38,7 +38,7 @@ const handleLogin = async (req, res) => {
     // create JWTs
     const accessToken = signToken(
       foundUser.username,
-      foundUser.firstname,
+      foundUser.name,
       foundUser.roles
     );
     const refreshToken = jwt.sign(
