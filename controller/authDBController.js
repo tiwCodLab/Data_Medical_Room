@@ -6,7 +6,7 @@ const signToken = (username, name, roles) => {
     {
       UserInfo: {
         username: username,
-        name: name,
+        firstname: name, // เปลี่ยน name เป็น firstname เพื่อให้สอดคล้องกับการใช้งานในฟังก์ชัน handleRefreshToken ที่ใช้ชื่อ firstname
         roles: roles,
       },
     },
@@ -18,6 +18,7 @@ const signToken = (username, name, roles) => {
     }
   );
 };
+
 const handleLogin = async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password)
