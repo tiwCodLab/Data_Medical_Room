@@ -12,7 +12,7 @@ const signToken = (username, firstname, roles) => {
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
-      expiresIn: "10s", // 20min
+      expiresIn: "3600s", // 60min
     }
   );
 };
