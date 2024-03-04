@@ -12,10 +12,12 @@ const signToken = (username, firstname, roles) => {
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
-      expiresIn: "1200s", // 20min
+      expiresIn: "3600s", // 20min
     }
   );
 };
+
+
 const handleLogin = async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password)
