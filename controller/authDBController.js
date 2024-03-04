@@ -1,12 +1,12 @@
 import User from "../model/UserDB.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-const signToken = (username, name, roles) => {
+const signToken = (username, firstname, roles) => {
   return jwt.sign(
     {
       UserInfo: {
         username: username,
-        firstname: name, // เปลี่ยน name เป็น firstname เพื่อให้สอดคล้องกับการใช้งานในฟังก์ชัน handleRefreshToken ที่ใช้ชื่อ firstname
+        firstname: firstname, // เปลี่ยน name เป็น firstname เพื่อให้สอดคล้องกับการใช้งานในฟังก์ชัน handleRefreshToken ที่ใช้ชื่อ firstname
         roles: roles,
       },
     },
