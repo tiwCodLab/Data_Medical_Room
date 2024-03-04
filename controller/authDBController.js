@@ -14,7 +14,7 @@ const signToken = (username, firstname, roles) => {
     {
       expiresIn: process.env.ACCESS_TOKEN_TIME
         ? process.env.ACCESS_TOKEN_TIME
-        : "1200s", // 20min
+        : "3600s", // 30min
     }
   );
 };
