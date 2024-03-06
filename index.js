@@ -38,12 +38,16 @@ mongooseDbConnect();
 const app = express();
 
 // กำหนดค่า CORS middleware
-app.use(
-  cors({
-    origin: "https://tu-wellness-center.vercel.app", // กำหนดโดเมนของเว็บไซต์ของคุณ
-    credentials: true, // กำหนดให้ส่งคุกกี้ไปยังเซิร์ฟเวอร์
-  })
-);
+app.use(cors());
+
+// const cors = require('cors');
+
+// app.use(cors({
+//   origin: 'http://localhost:3000', // กำหนดโดเมนของเว็บไซต์ของคุณ
+//   credentials: true // กำหนดให้ส่งคุกกี้ไปยังเซิร์ฟเวอร์
+// }));
+
+// ไม่ต้องใช้ middleware สำหรับตั้งค่า CORS ที่คุณเขียนเอง
 
 // custom middleware logger
 app.use(logger("short"));
