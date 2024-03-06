@@ -38,16 +38,13 @@ mongooseDbConnect();
 const app = express();
 
 // กำหนดค่า CORS middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://api-data-medical-room-tu.onrender.com", // กำหนดโดเมนของเว็บไซต์ของคุณ
+    credentials: true, // กำหนดให้ส่งคุกกี้ไปยังเซิร์ฟเวอร์
+  })
+);
 
-// เพิ่ม middleware สำหรับตั้งค่า CORS
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*"); // กำหนดโดเมนของเว็บไซต์ของคุณ
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE"); // กำหนดว่าเซิร์ฟเวอร์ยอมรับเมทอด HTTP ไหน
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // กำหนด header ที่ยอมรับ
-  res.setHeader("Access-Control-Allow-Credentials", true); // กำหนดให้เซิร์ฟเวอร์รับคุกกี้จากโดเมนอื่นได้
-  next();
-});
 // custom middleware logger
 app.use(logger("short"));
 // built-in middleware to handle urlencoded form data
