@@ -40,7 +40,7 @@ const app = express();
 // กำหนดค่า CORS middleware
 app.use(
   cors({
-    origin: "https://api-data-medical-room-tu.onrender.com", // กำหนดโดเมนของเว็บไซต์ของคุณ
+    origin: "http://localhost:3000", // กำหนดโดเมนของเว็บไซต์ของคุณ
     credentials: true, // กำหนดให้ส่งคุกกี้ไปยังเซิร์ฟเวอร์
   })
 );
