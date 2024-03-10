@@ -1,12 +1,18 @@
 import User from "../model/UserDB.js";
 import ROLES_LIST from "../config/rolesList.js";
 import bcrypt from "bcrypt";
+
 export const list = async (req, res) => {
-  const result = await User.find()
-    .sort({ name: 1 })
-    .select(["_id", "firstname", "lastname", "username", "roles"])
-    .exec();
-  return res.json(result);
+  try {
+    const userData = await User.find()
+      .sort({ name: 1 })
+      .select(["_id", "firstname", "lastname", "username", "roles"])
+      .exec();
+    return res.json(userData);
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
 };
 // add new user
 export const create = async (req, res) => {
@@ -102,7 +108,6 @@ export const put = async (req, res) => {
     });
   }
 };
-
 
 export const getUserCount = async (req, res) => {
   try {

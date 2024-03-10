@@ -5,8 +5,6 @@ import * as url from "url";
 import mongooseDbConnect from "./config/dbConnect.js";
 import cors from "cors";
 // cookie acessing
-// To allow the browser to set cookies and adhere to Same Origin Policy,
-
 import cookieParser from "cookie-parser";
 // authorization
 import verifyJWT from "./middleware/verifyJWT.js";
@@ -29,6 +27,7 @@ import GenaralRouter from "./router/generalRouter.js";
 import psychologist_patientRouter from "./router/psychologistRouter/psychologist_patientRouter.js";
 import counselingRouter from "./router/psychologistRouter/psy_counselingRouter.js";
 import AppoinmentRouter from "./router/psychologistRouter/psy_appoinmetnRouter.js";
+import authenticateToken from "./middleware/authenticateToken .js";
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
@@ -38,16 +37,13 @@ mongooseDbConnect();
 const app = express();
 
 // กำหนดค่า CORS middleware
-app.use(cors());
-
-// const cors = require('cors');
-
-// app.use(cors({
-//   origin: 'http://localhost:3000', // กำหนดโดเมนของเว็บไซต์ของคุณ
-//   credentials: true // กำหนดให้ส่งคุกกี้ไปยังเซิร์ฟเวอร์
-// }));
-
-// ไม่ต้องใช้ middleware สำหรับตั้งค่า CORS ที่คุณเขียนเอง
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3000"],
+    // origin: ["https://tu-wellness-center.vercel.app"],
+  })
+);
 
 // custom middleware logger
 app.use(logger("short"));
@@ -69,7 +65,7 @@ app.get("/secret", verifyJWT, (req, res) =>
 // REST for products or user
 app.use("/api/product", productRouter);
 app.use("/api/user", verifyJWT, userRouter);
-app.use("/api/patient", patientRouter);
+app.use("/api/patient", authenticateToken, patientRouter);
 app.use("/api/status", statusRouter);
 app.use("/api/organization", organizationRouter);
 app.use("/api/medicalrecord", medicalRecordRouter);

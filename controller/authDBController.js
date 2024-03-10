@@ -12,7 +12,7 @@ const signToken = (username, firstname, roles) => {
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
-      expiresIn: "3600s", // 60min
+      expiresIn: "1h", // 60min
     }
   );
 };
@@ -34,10 +34,18 @@ const handleLogin = async (req, res) => {
   if (match) {
     const roles = Object.values(foundUser.roles).filter(Boolean); // short form of .filter(item => Boolean(item))
     // create JWTs
-    const accessToken = signToken(
-      foundUser.username,
-      foundUser.firstname,
-      foundUser.roles
+    const accessToken = jwt.sign(
+      {
+        UserInfo: {
+          username: foundUser.username,
+          firstname: foundUser.firstname,
+          roles: foundUser.roles,
+        },
+      },
+      process.env.ACCESS_TOKEN_SECRET,
+      {
+        expiresIn: "1h", // 60min
+      }
     );
     const refreshToken = jwt.sign(
       { username: foundUser.username },
@@ -49,9 +57,9 @@ const handleLogin = async (req, res) => {
       }
     );
     // Saving refreshToken with current user
-    foundUser = await User.findOneAndUpdate(
+    await User.findOneAndUpdate(
       { username },
-      { refreshToken },
+      { refreshToken }, // Save refreshToken to appropriate field
       {
         upsert: false, // Make this update into an upsert
       }
@@ -71,6 +79,7 @@ const handleLogin = async (req, res) => {
     res.sendStatus(401);
   }
 };
+
 const handleLogout = async (req, res) => {
   // On client, also delete the accessToken
   const cookies = req.cookies;

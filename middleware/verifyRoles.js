@@ -7,8 +7,7 @@ const verifyRoles = (...allowedRoles) => {
     // and the request's username is the owner of the resource
     if (
       rolesArray.findIndex((e) => e === ROLES_LIST.Owner) >= 0 &&
-      /* beware that this work only if username is used as request's 
-parameter */
+      /* beware that this work only if username is used as request's parameter */
       req.username === req.params.username
     ) {
       console.log("passing owner checking");

@@ -1,4 +1,5 @@
 import Patient from "../model/PatientsDB.js";
+import jwt from "jsonwebtoken";
 
 //ค้นหา
 export const searchPatient = async (req, res) => {
@@ -31,14 +32,14 @@ export const listPatient = async (req, res) => {
     // Calculate skip value based on page and page size
     const skip = (page - 1) * pageSize;
 
-    const result = await Patient.find()
+    const patients = await Patient.find()
       .populate("status")
       .populate("organizations")
       .skip(skip)
       .limit(parseInt(pageSize))
       .exec();
 
-    return res.json(result);
+    return res.json(patients); // แก้ result เป็น patients
   } catch (error) {
     return res.status(500).json({
       message: "Internal Server Error",
@@ -46,6 +47,7 @@ export const listPatient = async (req, res) => {
     });
   }
 };
+
 function generateStudentID() {
   let studentID = "63025"; // นำค่าเริ่มต้นของรหัสนักศึกษาเข้ามาก่อน
   for (let i = 0; i < 5; i++) {
@@ -165,4 +167,3 @@ export const deletePatient = async (req, res) => {
     });
   }
 };
-
