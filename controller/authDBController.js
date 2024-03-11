@@ -71,6 +71,7 @@ const handleLogin = async (req, res) => {
       sameSite: "None",
       path: "/",
       maxAge: 24 * 60 * 60 * 1000, // should equal to the server's refresh token time
+      domain: "https://api-data-medical-room-tu.onrender.com",
     });
     // Send authorization roles and access token to user
 
