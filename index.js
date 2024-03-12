@@ -65,7 +65,7 @@ app.get("/secret", verifyJWT, (req, res) =>
 // REST for products or user
 app.use("/api/product", productRouter);
 app.use("/api/user", verifyJWT, userRouter);
-app.use("/api/patient", authenticateToken, patientRouter);
+app.use("/api/patient", verifyJWT, patientRouter);
 app.use("/api/status", statusRouter);
 app.use("/api/organization", organizationRouter);
 app.use("/api/medicalrecord", medicalRecordRouter);
