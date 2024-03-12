@@ -27,7 +27,7 @@ export const searchPatient = async (req, res) => {
 
 export const listPatient = async (req, res) => {
   try {
-    const { page = 1, pageSize = 30 } = req.query;
+    const { page = 1, pageSize = 500 } = req.query;
 
     // Calculate skip value based on page and page size
     const skip = (page - 1) * pageSize;
