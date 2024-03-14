@@ -113,17 +113,19 @@ export const createMedicalRecord = async (req, res) => {
 export const listMedicalRecords = async (req, res) => {
   try {
     // Extracting query parameters
-    // const { page = 1, pageSize = 100 } = req.query;
+    const { page = 1, pageSize = 500 } = req.query;
 
     // Parsing the page and pageSize to integers
-    // const pageNumber = parseInt(page);
-    // const recordsPerPage = parseInt(pageSize);
+    const pageNumber = parseInt(page);
+    const recordsPerPage = parseInt(pageSize);
     // Calculate the skip value based on the page number and page size
-    // const skip = (pageNumber - 1) * recordsPerPage;
+    const skip = (pageNumber - 1) * recordsPerPage;
 
     // Query the database with pagination
     const result = await MedicalRecord.find()
       .populate("patient")
+      .skip(skip)
+      .limit(recordsPerPage)
       .exec();
 
     return res.json(result);
