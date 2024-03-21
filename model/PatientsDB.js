@@ -28,6 +28,8 @@ const patientSchema = new mongoose.Schema({
   heart_rate: { type: Number },
   respiratory_rate: { type: Number },
   blood_pressure: { type: Number },
+  Last_edited: { type: String },
+  edited_by: { type: String },
 });
 
 // patientSchema.method.toProfileJSON = function () {
