@@ -1,4 +1,40 @@
 import Status from "../model/StatusDB.js";
+import Patient from "../model/PatientsDB.js";
+
+export const createPatient = async (req, res) => {
+  const {
+    student_id,
+    patient_fname,
+    patient_lname,
+    status,
+    organizations,
+    age,
+  } = req.body;
+
+  try {
+    // สร้างข้อมูลผู้ป่วยในฐานข้อมูล
+
+    const duplicate = await Patient.findOne({
+      student_id: student_id,
+    });
+    if (duplicate) {
+      return res.sendStatus(409);
+    } else {
+      const newPatient = await Patient.create({ ...req.body });
+      return res.status(201).json(newPatient);
+    }
+  } catch (error) {
+    // หากมีข้อผิดพลาดในการสร้างข้อมูล
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+
+
+
 
 export const listStatus = async (req, res) => {
   const result = await Status.find();

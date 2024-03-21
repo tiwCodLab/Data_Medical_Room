@@ -58,10 +58,6 @@ const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 app.use("/", express.static(__dirname + "/public"));
 // routes
 app.use("/auth", authRouters); // register, login, logout, refreshToken
-// test to verify JWT
-app.get("/secret", verifyJWT, (req, res) =>
-  res.json({ success: true, message: "Secret Page" })
-);
 // REST for products or user
 app.use("/api/product", productRouter);
 app.use("/api/user", verifyJWT, userRouter);
