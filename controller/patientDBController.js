@@ -64,7 +64,6 @@ export const createPatient = async (req, res) => {
     patient_lname,
     status,
     organizations,
-    age,
   } = req.body;
 
   try {
