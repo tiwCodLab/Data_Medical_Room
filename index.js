@@ -37,13 +37,14 @@ mongooseDbConnect();
 const app = express();
 
 // กำหนดค่า CORS middleware
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3000"],
+    // origin: ["https://tu-wellness-center.vercel.app"],
+  })
+);
 
-// {
-//     credentials: true,
-//     // origin: ["http://localhost:3000"],
-//     origin: ["https://tu-wellness-center.vercel.app"],
-//   }
 // custom middleware logger
 app.use(logger("short"));
 // built-in middleware to handle urlencoded form data
