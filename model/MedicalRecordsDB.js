@@ -3,7 +3,7 @@ import * as mongooseDef from "mongoose";
 let mongoose = mongooseDef.default;
 
 const medicalRecordSchema = new mongoose.Schema({
-  medicalRecord_no: { type: String },
+  medicalRecord_no: { type: Number },
   medicalRecord_id: { type: String },
   patient: { type: mongoose.Schema.Types.ObjectId, ref: "Patient" },
   visittime: { type: String },
