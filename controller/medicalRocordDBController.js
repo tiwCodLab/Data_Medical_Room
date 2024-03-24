@@ -92,8 +92,18 @@ export const createMedicalRecord = async (req, res) => {
       });
     }
 
+    // หาค่าลำดับเลขตัวสุดท้ายในฐานข้อมูล
+    const lastGenaral = await MedicalRecord.findOne().sort({
+      medicalRecord_no: -1,
+    });
+    let lastNo = 0;
+    if (lastGenaral) {
+      lastNo = lastGenaral.medicalRecord_no;
+    }
+
     // Create Medical Record with medications_dis array
     const newMedicalRecord = await MedicalRecord.create({
+      medicalRecord_no: lastNo + 1,
       total_price_medications: sum,
       total_price_supplies: sum_supplies,
       medications_dis, // ส่ง medications_dis ที่เก็บข้อมูลของแต่ละรายการยา
