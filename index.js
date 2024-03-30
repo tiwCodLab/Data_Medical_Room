@@ -30,7 +30,7 @@ import AppoinmentRouter from "./router/psychologistRouter/psy_appoinmetnRouter.j
 import authenticateToken from "./middleware/authenticateToken .js";
 
 dotenv.config();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT;
 
 mongooseDbConnect();
 
