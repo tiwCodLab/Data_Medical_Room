@@ -4,7 +4,7 @@ let mongoose = mongooseDef.default;
 const AppoinmentSchema = new mongoose.Schema({
   patient: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Psychologist_Patient",
+    ref: "Patient",
   },
   counseling_recordId: {
     type: mongoose.Schema.Types.ObjectId,
