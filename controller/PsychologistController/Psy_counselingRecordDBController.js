@@ -1,5 +1,7 @@
 import CounselingRecord from "../../model/psychologist/Psy_CounselingRecorcdDB.js"; // ต้องแก้ไข path ให้เป็นที่ถูกต้องตามโครงสร้างโปรเจค
 import Appoinment from "../../model/psychologist/Psy_AppointmentDB.js";
+import Patient from "../../model/PatientsDB.js";
+import User from "../../model/UserDB.js";
 // Controller function เพื่อสร้าง counseling record ใหม่
 const createCounselingRecord = async (req, res) => {
   let { patient, appointment_date, appointment_time, ...otherFields } =
@@ -97,6 +99,18 @@ const getCounselingByPatientId = async (req, res) => {
   }
 };
 
+const getCounselingCount = async (req, res) => {
+  try {
+    const CounselingRecordCount = await CounselingRecord.countDocuments();
+    const patientCount = await Patient.countDocuments();
+    const userCont = await User.countDocuments();
+    res.json({ patientCount, CounselingRecordCount, userCont });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 export {
   createCounselingRecord,
   getAllCounselingRecords,
@@ -104,4 +118,5 @@ export {
   updateCounselingRecord,
   deleteCounselingRecord,
   getCounselingByPatientId,
+  getCounselingCount,
 };

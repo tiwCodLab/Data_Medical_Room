@@ -93,6 +93,7 @@ const medicalRecordSchema = new mongoose.Schema({
     },
   ],
   total_price_supplies: { type: Number },
+  forwarding: { tyep: String },
   remarks: { type: String },
 });
 
