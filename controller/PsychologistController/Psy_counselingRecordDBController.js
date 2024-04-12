@@ -7,8 +7,16 @@ const createCounselingRecord = async (req, res) => {
   let { patient, appointment_date, appointment_time, ...otherFields } =
     req.body;
   try {
+    const lastGenaral = await CounselingRecord.findOne().sort({
+      id: -1,
+    });
+    let lastNo = 0;
+    if (lastGenaral) {
+      lastNo = lastGenaral.id;
+    }
     // สร้าง CounselingRecord ใหม่
     const counselingRecord = new CounselingRecord({
+      id: lastNo + 1,
       patient: patient,
       appointment_date: appointment_date,
       appointment_time: appointment_time,

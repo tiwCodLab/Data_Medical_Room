@@ -24,10 +24,9 @@ import DispensingRouter from "./router/dispensingRouter.js";
 import ChecklistRouter from "./router/checklistRouter.js";
 import SystemRouter from "./router/sysyemreviewRouter.js";
 import GenaralRouter from "./router/generalRouter.js";
-import psychologist_patientRouter from "./router/psychologistRouter/psychologist_patientRouter.js";
+import psychologist_patientRouter from "./router/psychologistRouter/psy_patientRouter.js";
 import counselingRouter from "./router/psychologistRouter/psy_counselingRouter.js";
-import AppoinmentRouter from "./router/psychologistRouter/psy_appoinmetnRouter.js";
-import authenticateToken from "./middleware/authenticateToken .js";
+import AppoinmentRouter from "./router/psychologistRouter/psy_appoinmentRouter.js";
 
 dotenv.config();
 const PORT = process.env.PORT;
@@ -40,8 +39,8 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    // origin: ["http://localhost:3000"],
-    origin: ["https://tu-wellness-center.vercel.app"],
+    origin: ["http://localhost:3000"],
+    // origin: ["https://tu-wellness-center.vercel.app"],
   })
 );
 

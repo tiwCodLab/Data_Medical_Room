@@ -2,6 +2,7 @@ import * as mongooseDef from "mongoose";
 let mongoose = mongooseDef.default;
 
 const CounselingSchema = new mongoose.Schema({
+  id: { type: Number },
   patient: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Patient",

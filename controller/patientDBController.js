@@ -58,13 +58,8 @@ function generateStudentID() {
 }
 
 export const createPatient = async (req, res) => {
-  const {
-    student_id,
-    patient_fname,
-    patient_lname,
-    status,
-    organizations,
-  } = req.body;
+  const { student_id, patient_fname, patient_lname, status, organizations } =
+    req.body;
 
   try {
     // สร้างข้อมูลผู้ป่วยในฐานข้อมูล
