@@ -9,7 +9,6 @@ import cookieParser from "cookie-parser";
 // authorization
 import verifyJWT from "./middleware/verifyJWT.js";
 // routers
-import productRouter from "./router/productRouter.js";
 import userRouter from "./router/userRouter.js";
 import authRouters from "./router/authRouter.js";
 import patientRouter from "./router/patientRouter.js";
@@ -39,8 +38,8 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    // origin: ["http://localhost:3000"],
-    origin: ["https://tu-wellness-center.vercel.app"],
+    // origin: ["https://tu-wellness-center.vercel.app"],
+    origin: ["http://localhost:3000"],
   })
 );
 
@@ -57,13 +56,11 @@ const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 app.use("/", express.static(__dirname + "/public"));
 // routes
 app.use("/auth", authRouters); // register, login, logout, refreshToken
-// REST for products or user
-app.use("/api/product", productRouter);
 app.use("/api/user", verifyJWT, userRouter);
 app.use("/api/patient", verifyJWT, patientRouter);
 app.use("/api/status", statusRouter);
 app.use("/api/organization", organizationRouter);
-app.use("/api/medicalrecord", medicalRecordRouter);
+app.use("/api/medicalrecord", verifyJWT, medicalRecordRouter);
 app.use("/api/medication", medicaltionRouter);
 app.use("/api/diagnosis", DiagnosisRouter);
 app.use("/api/medicalsupplies", medicalSuppliesRouter);
