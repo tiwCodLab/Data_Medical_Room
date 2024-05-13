@@ -1,5 +1,5 @@
 import express from "express";
-import { list, get, put } from "../controller/userDBController.js";
+import { list, get, put, getusername } from "../controller/userDBController.js";
 import verifyRoles from "../middleware/verifyRoles.js";
 import ROLES_LIST from "../config/rolesList.js";
 let userRouter = express.Router();
@@ -14,4 +14,6 @@ userRouter.put(
   verifyRoles(ROLES_LIST.Admin, ROLES_LIST.Nurse),
   put
 );
+
+userRouter.get("/users/:username", getusername);
 export default userRouter;

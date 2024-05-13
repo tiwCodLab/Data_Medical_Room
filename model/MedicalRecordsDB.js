@@ -76,6 +76,8 @@ const medicalRecordSchema = new mongoose.Schema({
   diagnosis: { type: String },
   nursing_activities: { type: String },
   recommendations: { type: String },
+  otherRecommendations: { type: String },
+  forwarding: { type: String },
   form_2q_1: { type: String },
   form_2q_2: { type: String },
   medications_dis: [
@@ -94,7 +96,6 @@ const medicalRecordSchema = new mongoose.Schema({
     },
   ],
   total_price_supplies: { type: Number },
-  forwarding: { tyep: String },
   remarks: { type: String },
 });
 

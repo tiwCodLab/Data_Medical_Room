@@ -2,6 +2,26 @@ import User from "../model/UserDB.js";
 import ROLES_LIST from "../config/rolesList.js";
 import bcrypt from "bcrypt";
 
+// Find a single user with username
+export const getusername = (req, res) => {
+  const username = req.params.username; // Extract the username from the request parameters
+  User.findOne({ username: username }) // Use findOne method to find the user with the provided username
+    .then((user) => {
+      if (!user) {
+        // If user not found, return a 404 error
+        return res.status(404).send({
+          error: "User not found with username " + username,
+        });
+      }
+      res.json(user.toProfileJSON()); // If user found, return the user data
+    })
+    .catch((err) => {
+      return res.status(500).send({
+        error: "Error retrieving user with username " + username,
+      });
+    });
+};
+
 export const list = async (req, res) => {
   try {
     const userData = await User.find()

@@ -34,8 +34,6 @@ export const createPatient = async (req, res) => {
 
 
 
-
-
 export const listStatus = async (req, res) => {
   const result = await Status.find();
   return res.json(result);
